@@ -18,6 +18,12 @@ font-weight: bold;
 }
 
 .invalid-feedback {
-color: red;
+color: rgb(203, 8, 8);
 font-size: 0.8em;
+}
+
+.custom-file-input:invalid + .custom-file-input-error {
+    display: block; 
+    color: rgb(203, 8, 8);
+    font-size: 0.8em;
 }
