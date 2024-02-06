@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Registration.css';
 
 function Registration() {
@@ -113,6 +114,7 @@ function Registration() {
 
   return (
     <div className="card">
+      <Link to="/" className="btn-close"></Link>
       <h2 className="card-header text-center fw-bold">Sign Up</h2>
       <div className="card-body"></div>
       <form noValidate validated={validated} onSubmit={handleSubmit}>
