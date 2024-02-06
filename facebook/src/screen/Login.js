@@ -12,8 +12,7 @@ const Login = () => {
       console.log('Password:', password);
     };
   
-    return (
-        
+    return (        
         <div class="row">
             <div class="col order-first">
                 <h1 class="display-3">Facebook</h1>

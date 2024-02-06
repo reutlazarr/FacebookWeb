@@ -4,11 +4,11 @@ import './Registration.css';
 function Registration() {
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: 'Mark',
-    lastName: 'Otto',
-    username: '',
-    city: '',
-    state: '',
+    firstName: '',
+    lastName: '',
+    emailAdress: '',
+    newPassword: '',
+    confirmPassword: '',
     zip: ''
   });
 
@@ -21,30 +21,26 @@ function Registration() {
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevent default form submission
     const form = event.currentTarget;
-
-    if (form.checkValidity() === false) {
+    if (!form.checkValidity()) {
+      // If the form is invalid, display validation feedback
       event.stopPropagation();
-    } else {
-      // Here you can handle the form submission, such as sending the data to the server
-      console.log('Form data:', formData);
     }
-
-    setValidated(true);
+    setValidated(true); // Set validated state after form submission
   };
 
   return (
-    <div class="card">
-      <h5 class="card-header text-center">Sign Up</h5>
-      <div class="card-body"></div>
+    <div className="card">
+      <h2 className="card-header text-center fw-bold">Sign Up</h2>
+      <div className="card-body"></div>
       <form noValidate validated={validated} onSubmit={handleSubmit}>
         <div className="row g-3">
-          <div className="col-md-4">
+          <div className="px-3 col-md-6">
             <label htmlFor="validationCustom01" className="form-label">First name</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${validated ? 'is-invalid' : ''}`}
               id="validationCustom01"
               name="firstName"
               placeholder="First name"
@@ -56,11 +52,11 @@ function Registration() {
               Please provide a valid first name.
             </div>
           </div>
-          <div className="col-md-4">
+          <div className="px-3 col-md-6">
             <label htmlFor="validationCustom02" className="form-label">Last name</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${validated ? 'is-invalid' : ''}`}
               id="validationCustom02"
               name="lastName"
               placeholder="Last name"
@@ -74,15 +70,15 @@ function Registration() {
           </div>
         </div>
         <div className="row g-3">
-          <div className="col-md-8">
+          <div className="px-3 col-md-12">
             <label htmlFor="validationCustom03" className="form-label">Email adress</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${validated ? 'is-invalid' : ''}`}
               id="validationCustom03"
-              name="EmailAdress"
+              name="emailAdress"
               placeholder="name@example.com"
-              value={formData.EmailAdress}
+              value={formData.emailAdress}
               onChange={handleChange}
               required
             />
@@ -92,15 +88,15 @@ function Registration() {
           </div>
         </div>  
         <div className="row g-3">
-          <div className="col-md-8">
+          <div className="px-3 col-md-12">
             <label htmlFor="validationCustom04" className="form-label">New password</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${validated ? 'is-invalid' : ''}`}
               id="validationCustom04"
-              name="NewPassword"
+              name="newPassword"
               placeholder="New password"
-              value={formData.NewPassworde}
+              value={formData.newPassworde}
               onChange={handleChange}
               required
             />
@@ -110,15 +106,15 @@ function Registration() {
           </div>
         </div>
         <div className="row g-3">
-          <div className="col-md-8">
+          <div className="px-3 col-md-12">
             <label htmlFor="validationCustom05" className="form-label">Confirm password</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${validated ? 'is-invalid' : ''}`}
               id="validationCustom05"
-              name="ConfirmPassword"
+              name="confirmPassword"
               placeholder="Confirm password"
-              value={formData.ConfirmPassworde}
+              value={formData.confirmPassworde}
               onChange={handleChange}
               required
             />
@@ -127,8 +123,7 @@ function Registration() {
             </div>
           </div>
         </div>    
-          {/* Other form fields with similar structure */}
-          <div className="col-12">
+          <div className="px-2 col-12">
             <div className="form-check">
               <input className="form-check-input" type="checkbox" id="invalidCheck" required />
               <label className="form-check-label" htmlFor="invalidCheck">
@@ -140,7 +135,7 @@ function Registration() {
             </div>
           </div>
           <div className="col-12">
-            <button className="btn btn-success" type="SignUp">Sign Up</button>
+            <button className="btn btn-success" type="submit">Sign Up</button>
           </div>
       </form>
     </div>
