@@ -13,47 +13,48 @@ const Login = () => {
       console.log('Password:', password);
     };
   
-    return (        
-        <div class="row">
-            <div class="row ">
-                <h1 class="display-3">Facebook</h1>
-            </div>
-            <div class="row ">
-                <div class="card text-center">
-                    <form onSubmit={handleSubmit}>
-                        <div class="card-body">
-                            <p className="form-floating mb-3">
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    id="floatingInput"
-                                    placeholder="name@example.com"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)} />
-                                <label htmlFor="floatingInput">Email or phone</label>
-                            </p>
-                            <p className="form-floating mb-3">
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    id="floatingPassword"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)} />
-                                <label htmlFor="floatingPassword">Password</label>
-                            </p>
-                            <div class="d-grid gap-2">
-                                <button type="submit" className="btn btn-primary btn-lg">Log in</button>
+    return (   
+        <div className="container">
+            <div classNames="row">
+                <div className="col-sm-6">
+                    <h1 className="display-3">Facebook</h1>
+                </div>
+                <div className="col-sm-6">
+                    <div className="card text-center shadow p-4 mb-4 login-card">
+                        <form onSubmit={handleSubmit}>
+                            <div class="card-body">
+                                <p className="form-floating mb-3">
+                                    <input
+                                        type="email"
+                                        className="form-control"
+                                        id="floatingInput"
+                                        placeholder="name@example.com"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)} />
+                                    <label htmlFor="floatingInput">Email or phone</label>
+                                </p>
+                                <p className="form-floating mb-3">
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        id="floatingPassword"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)} />
+                                    <label htmlFor="floatingPassword">Password</label>
+                                </p>
+                                <div class="d-grid gap-2">
+                                    <button type="submit" className="btn btn-primary btn-lg">Log in</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-footer text-body-secondary">
-                        <Link to="/register" className="btn btn-success">Create new account</Link>
-                        </div>
-                    </form>
+                            <div className="card-footer text-body-secondary">
+                                <Link to="/register" className="btn btn-success">Create new account</Link>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        
+        </div>     
     );
   };
   

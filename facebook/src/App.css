@@ -1,7 +1,6 @@
-.container {
-  max-height: 100%;
-  max-width: 100%;
-  background-color: rgb(194, 226, 234);
+.container-fluid {
+  background-color: rgb(194, 226, 234, 0.4);
+  
   padding: 100px;
 }
 

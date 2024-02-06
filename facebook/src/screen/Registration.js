@@ -113,143 +113,153 @@ function Registration() {
   };
 
   return (
-    <div className="card">
-      <Link to="/" className="btn-close"></Link>
-      <h2 className="card-header text-center fw-bold">Sign Up</h2>
-      <div className="card-body"></div>
-      <form noValidate validated={validated} onSubmit={handleSubmit}>
-        <div className="row g-3">
-          <div className="px-3 col-md-6">
-            <label htmlFor="validationCustom01" className="form-label">First name</label>
-            <input
-              type="text"
-              className={`form-control ${validated && formData.firstNameError ? 'is-invalid' : ''}`}
-              id="validationCustom01"
-              name="firstName"
-              placeholder="First name"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-            />
-            <div className="invalid-feedback">
-              {formData.firstNameError}
-            </div>
+    <div className="container">
+      <div className="row justify-content-center">
+        <div className="col-md-6"></div>
+        <div className="card shadow p-4 mb-4 registration-card">     
+          <div className="card-header">
+            <Link to="/" className="btn btn-lg btn-close" aria-label="Close"></Link>
+            <h2 className="text-center fw-bold">Sign Up</h2>
           </div>
-          <div className="px-3 col-md-6">
-            <label htmlFor="validationCustom02" className="form-label">Last name</label>
-            <input
-              type="text"
-              className={`form-control ${validated && formData.lastNameError ? 'is-invalid' : ''}`}
-              id="validationCustom02"
-              name="lastName"
-              placeholder="Last name"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-            />
-            <div className="invalid-feedback">
-              {formData.lastNameError}
-            </div>
-          </div>
-        </div>
-        <div className="row g-3">
-          <div className="px-3 col-md-12">
-            <label htmlFor="validationCustom03" className="form-label">Email address</label>
-            <input
-              type="email"
-              className={`form-control ${validated && formData.emailError ? 'is-invalid' : ''}`}
-              id="validationCustom03"
-              name="email"
-              placeholder="Email address"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            <div className="invalid-feedback">
-              {formData.emailError}
-            </div>
-          </div>
-        </div>
-        <div className="row g-3">
-          <div className="px-3 col-md-12">
-            <label htmlFor="validationCustom04" className="form-label">Password</label>
-            <input
-              type="password"
-              className={`form-control ${validated && formData.passwordError ? 'is-invalid' : ''}`}
-              id="validationCustom04"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-            <div className="invalid-feedback">
-              {formData.passwordError}
-            </div>
-          </div>
-        </div>
-        <div className="row g-3">
-          <div className="px-3 col-md-12">
-            <label htmlFor="validationCustom05" className="form-label">Confirm password</label>
-            <input
-              type="password"
-              className={`form-control ${validated && formData.confirmPasswordError ? 'is-invalid' : ''}`}
-              id="validationCustom05"
-              name="confirmPassword"
-              placeholder="Confirm password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-            <div className="invalid-feedback">
-              {formData.confirmPasswordError}
-            </div>
-          </div>
-        </div>
-        <div className="row g-3">
-          <div className="p-3 col-12">
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={handleImageChange} 
-              className={`custom-file-input ${validated && !formData.selectedImage ? 'is-invalid' : ''}`} 
-              required 
-            />
-            {formData.selectedImage && (
-              <div>
-                <h3>Selected Image:</h3>
-                <img src={formData.selectedImage} alt="Selected" style={{ maxWidth: '200px' }} />
+          <div className="card-body"></div>
+          <form noValidate validated={validated} onSubmit={handleSubmit}>
+            <div className="row g-3">
+              <div className="px-3 col-md-6">
+                <label htmlFor="validationCustom01" className="form-label">First name</label>
+                <input
+                  type="text"
+                  className={`form-control ${validated && formData.firstNameError ? 'is-invalid' : ''}`}
+                  id="validationCustom01"
+                  name="firstName"
+                  placeholder="First name"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                />
+                <div className="invalid-feedback">
+                  {formData.firstNameError}
+                </div>
               </div>
-            )}
-            {validated && !formData.selectedImage && (
-              <span className="custom-file-input-error">No file chosen</span>
-            )}
-          </div>
-        </div> 
-        <div className="px-2 col-12">
-          <div className="form-check">
-            <input
-              className={`form-check-input ${validated && formData.agreeTermsError ? 'is-invalid' : ''}`}
-              type="checkbox"
-              id="invalidCheck"
-              name="agreeTerms"
-              checked={formData.agreeTerms}
-              onChange={handleChange}
-              required
-            />
-            <label className="form-check-label" htmlFor="invalidCheck">
-              Agree to terms and conditions
-            </label>
-            <div className="invalid-feedback">
-              {formData.agreeTermsError}
+              <div className="px-3 col-md-6">
+                <label htmlFor="validationCustom02" className="form-label">Last name</label>
+                <input
+                  type="text"
+                  className={`form-control ${validated && formData.lastNameError ? 'is-invalid' : ''}`}
+                  id="validationCustom02"
+                  name="lastName"
+                  placeholder="Last name"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                />
+                <div className="invalid-feedback">
+                  {formData.lastNameError}
+                </div>
+              </div>
             </div>
-          </div>
+            <div className="row g-3">
+              <div className="px-3 col-md-12">
+                <label htmlFor="validationCustom03" className="form-label">Email address</label>
+                <input
+                  type="email"
+                  className={`form-control ${validated && formData.emailError ? 'is-invalid' : ''}`}
+                  id="validationCustom03"
+                  name="email"
+                  placeholder="Email address"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+                <div className="invalid-feedback">
+                  {formData.emailError}
+                </div>
+              </div>
+            </div>
+            <div className="row g-3">
+              <div className="px-3 col-md-12">
+                <label htmlFor="validationCustom04" className="form-label">Password</label>
+                <input
+                  type="password"
+                  className={`form-control ${validated && formData.passwordError ? 'is-invalid' : ''}`}
+                  id="validationCustom04"
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+                <div className="invalid-feedback">
+                  {formData.passwordError}
+                </div>
+              </div>
+            </div>
+            <div className="row g-3">
+              <div className="px-3 col-md-12">
+                <label htmlFor="validationCustom05" className="form-label">Confirm password</label>
+                <input
+                  type="password"
+                  className={`form-control ${validated && formData.confirmPasswordError ? 'is-invalid' : ''}`}
+                  id="validationCustom05"
+                  name="confirmPassword"
+                  placeholder="Confirm password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                />
+                <div className="invalid-feedback">
+                  {formData.confirmPasswordError}
+                </div>
+              </div>
+            </div>
+            <div className="row g-3">
+              <div className="p-3 col-12">
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleImageChange} 
+                  className={`custom-file-input ${validated && !formData.selectedImage ? 'is-invalid' : ''}`} 
+                  required 
+                />
+                {formData.selectedImage && (
+                  <div>
+                    <h3>Selected Image:</h3>
+                    <img src={formData.selectedImage} alt="Selected" style={{ maxWidth: '200px' }} />
+                  </div>
+                )}
+                {validated && !formData.selectedImage && (
+                  <span className="custom-file-input-error">No file chosen</span>
+                )}
+              </div>
+            </div> 
+            <div className="px-2 col-12">
+              <div className="form-check">
+                <input
+                  className={`form-check-input ${validated && formData.agreeTermsError ? 'is-invalid' : ''}`}
+                  type="checkbox"
+                  id="invalidCheck"
+                  name="agreeTerms"
+                  checked={formData.agreeTerms}
+                  onChange={handleChange}
+                  required
+                />
+                <label className="form-check-label" htmlFor="invalidCheck">
+                  Agree to terms and conditions
+                </label>
+                <div className="invalid-feedback">
+                  {formData.agreeTermsError}
+                </div>
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="text-center">
+                <button className="btn btn-success" type="submit">Sign Up</button>
+              </div>
+            </div>
+          </form>
         </div>
-        <div className="col-12">
-          <button className="btn btn-success" type="submit">Sign Up</button>
-        </div>
-      </form>
+      </div>
     </div>
+
   );
 }
 
