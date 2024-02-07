@@ -5,6 +5,7 @@ import { UserDataList } from '../data/UserDataList';
 
 function Registration() {
   const navigate = useNavigate();
+  const { addUserData } = UserDataList();
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -54,7 +55,7 @@ function Registration() {
 
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent default form submission
-    const form = event.currentTarget;
+    //const form = event.currentTarget;
 
     // Validate form fields
     let isValid = true;
@@ -120,7 +121,7 @@ function Registration() {
         password: formData.password,
         selectedImage: formData.selectedImage
       };
-      UserDataList.addUserData({userData}); //Add userData to the list of users data
+      addUserData(userData); //Add userData to the list of users data
       
       // Clean
       setFormData({
@@ -134,7 +135,7 @@ function Registration() {
       });
 
       // Navigate back to the login page
-      navigate('/login');
+      navigate('/');
       //submitForm(); // function to submit the form data
 
     } else { // If the form is invalid, display validation feedback
@@ -165,6 +166,7 @@ function Registration() {
                   value={formData.firstName}
                   onChange={handleChange}
                   required
+                  autoComplete="First name"
                 />
                 <div className="invalid-feedback">
                   {formData.firstNameError}
@@ -181,6 +183,7 @@ function Registration() {
                   value={formData.lastName}
                   onChange={handleChange}
                   required
+                  autoComplete="Last name"
                 />
                 <div className="invalid-feedback">
                   {formData.lastNameError}
@@ -199,6 +202,7 @@ function Registration() {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  autoComplete="Email address"
                 />
                 <div className="invalid-feedback">
                   {formData.emailError}
@@ -217,6 +221,7 @@ function Registration() {
                   value={formData.password}
                   onChange={handleChange}
                   required
+                  autoComplete="password"
                 />
                 <div className="invalid-feedback">
                   {formData.passwordError}
@@ -235,6 +240,7 @@ function Registration() {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   required
+                  autoComplete="Confirm password"
                 />
                 <div className="invalid-feedback">
                   {formData.confirmPasswordError}

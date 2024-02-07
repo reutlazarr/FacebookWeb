@@ -1,13 +1,17 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export function UserDataList() {
 
     const [userDataList, setUserDataList] = useState([]);
 
-    function addUserData({ userData }) {
+    const addUserData = (userData) => {
         setUserDataList([...userDataList, userData]);
     }
+
+    return {
+        addUserData
+    };
 }
 
 export default UserDataList;

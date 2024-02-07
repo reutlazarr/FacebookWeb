@@ -9,8 +9,7 @@ const Login = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
       // Here you can handle the form submission, such as validating the inputs and sending them to the server
-      console.log('Email:', email);
-      console.log('Password:', password);
+      
     };
   
     return (   
