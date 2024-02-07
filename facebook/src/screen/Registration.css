@@ -1,0 +1,26 @@
+.registration-card {
+    margin: 0px 250px 0px;
+    width: 450px;
+    border: 2px ridge;
+    border-radius: 10px;
+}
+
+.card-header {
+    color: #14495e;
+    font-weight: bold;
+}
+  
+.form-label {
+font-weight: bold;
+}
+
+.invalid-feedback {
+color: rgb(203, 8, 8);
+font-size: 0.8em;
+}
+
+.custom-file-input:invalid + .custom-file-input-error {
+    display: block; 
+    color: rgb(203, 8, 8);
+    font-size: 0.8em;
+}
