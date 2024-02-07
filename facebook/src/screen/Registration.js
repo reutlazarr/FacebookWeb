@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Registration.css';
-import UserDataList from '../data/UserDataList';
 
 function Registration() {
   const navigate = useNavigate();
-  const { addUserData } = UserDataList();
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -121,7 +119,10 @@ function Registration() {
         password: formData.password,
         selectedImage: formData.selectedImage
       };
-      addUserData(userData); //Add userData to the list of users data
+      const users = JSON.parse(sessionStorage.getItem('users')) || [];
+      users.push(userData);
+      sessionStorage.setItem('users', JSON.stringify(users));
+      //alert('User registered successfully');
       
       // Clean
       setFormData({

@@ -1,29 +1,45 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Login.css';
-import UserDataList from '../data/UserDataList';
 
 const Login = () => {
-    const { userDataList } = UserDataList()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
     const [validated, setValidated] = useState(false);
   
     const handleSubmit = (e) => {
         e.preventDefault();
-        setErrors('');
-        // Find user with matching email and password
-        const user = userDataList.find(user => user.email === email && user.password === password); 
-        if (user) {
-            // User authenticated, proceed to next step (e.g., redirect to dashboard)
-            setValidated(false);
-            console.log('User authenticated:', user);
-        } else {
-            // No user found with matching credentials, display error message
-            setErrors('Invalid email or password');
+        setEmailError('');
+        setPasswordError('');
+        
+        if (!email) {
+            setEmailError('Email is required');
             setValidated(true);
-        }   
+            return;
+        }
+        // Find user with matching email
+        const users = JSON.parse(sessionStorage.getItem('users')) || [];
+        const emailExists = users.some(user => user.email === email);
+        if (!emailExists) {
+            setEmailError('Email not found');
+            setValidated(true);
+            return;
+        }
+        // Check if password is empty
+        if (!password) {
+            setPasswordError('Password is required');
+            setValidated(true);
+            return;
+        }
+        // Check if password is correct
+        if (emailExists.password !== password) {
+            setPasswordError('Invalid password');
+            setValidated(true);
+            return;
+        }
+        setValidated(false);  
     };
   
     return (   
@@ -34,28 +50,29 @@ const Login = () => {
                 </div>
                 <div className="col-sm-6">
                     <div className="card text-center shadow p-4 mb-4 login-card">
-                        <form noValidate onSubmit={handleSubmit}>
+                        <form noValidate validated={validated} onSubmit={handleSubmit}>
                             <div class="card-body">
-                                {errors && (<div className="text-danger pb-2">{errors}</div>)}
                                 <p className="form-floating mb-3">
                                     <input
                                         type="email"
-                                        className="form-control"
+                                        className={`form-control ${validated && emailError ? 'is-invalid' : ''}`}
                                         id="floatingInput"
                                         placeholder="name@example.com"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)} />
-                                    <label htmlFor="floatingInput">Email or phone</label>
+                                    <label htmlFor="floatingInput">Email</label>
+                                    {emailError && <div className="invalid-feedback">{emailError}</div>}
                                 </p>
                                 <p className="form-floating mb-3">
                                     <input
                                         type="password"
-                                        className="form-control"
+                                        className={`form-control ${validated && passwordError ? 'is-invalid' : ''}`}
                                         id="floatingPassword"
                                         placeholder="Password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)} />
                                     <label htmlFor="floatingPassword">Password</label>
+                                    {passwordError && <div className="invalid-feedback">{passwordError}</div>}
                                 </p>
                                 
                                 <div class="d-grid gap-2">
