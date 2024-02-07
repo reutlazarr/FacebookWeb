@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Registration.css';
+import { UserDataList } from '../data/UserDataList';
 
 function Registration() {
+  const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -21,16 +23,16 @@ function Registration() {
   });
 
   const handleChange = (e) => {
-    const { name, value, checked } = e.target;
+    const { name, value, checked } = e.target; // Get the event targt
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value, // Update the names in prevData with thier new value
       [`${name}Error`]: ''
     }));
     if (name === 'agreeTerms') {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: checked,
+        [name]: checked, // Update the checkbox agreeTerms
         [`${name}Error`]: ''
       }));
     }
@@ -71,6 +73,7 @@ function Registration() {
     if (!formData.email.trim()) {
       errors.emailError = 'Email address is required';
       isValid = false;
+      // Validte email in format <name@gnail.com>
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.emailError = 'Email address is invalid';
       isValid = false;
@@ -79,35 +82,62 @@ function Registration() {
     if (!formData.password.trim()) {
       errors.passwordError = 'Password is required';
       isValid = false;
+      // Validte password with at least 8 characters long
     } else if (formData.password.length < 8) {
       errors.passwordError = 'Password must be at least 8 characters long';
       isValid = false;
+      // Validte password has at least 1 lowercase letter, 1 uppercase letter and 1 digit
     } else if (!/[a-z]/.test(formData.password) || !/[A-Z]/.test(formData.password) || !/\d/.test(formData.password)) {
       errors.passwordError = 'Password must contain at least one lowercase letter, one uppercase letter, and one digit';
       isValid = false;
     }
 
+    // Validte confirm password match to password
     if (formData.password !== formData.confirmPassword) {
       errors.confirmPasswordError = 'Passwords do not match';
       isValid = false;
     }
 
+    // Validte user agree to terms
     if (!formData.agreeTerms) {
       errors.agreeTermsError = 'You must agree to terms and conditions';
       isValid = false;
     }
 
+    // Set formData with the data and matching erors
     setFormData((prevData) => ({
       ...prevData,
       ...errors
     }));
 
-    if (isValid) {
-      // If the form is valid, reset the validation state and submit the form
+    if (isValid) { // If the form is valid, reset the validation state and submit the form
       setValidated(false);
-      //submitForm(); // Your function to submit the form data
-    } else {
-      // If the form is invalid, display validation feedback
+      // Save user information
+      const userData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        selectedImage: formData.selectedImage
+      };
+      UserDataList.addUserData({userData}); //Add userData to the list of users data
+      
+      // Clean
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        agreeTerms: false,
+        selectedImage: null
+      });
+
+      // Navigate back to the login page
+      navigate('/login');
+      //submitForm(); // function to submit the form data
+
+    } else { // If the form is invalid, display validation feedback
       setValidated(true);
     }
   };
