@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
+import { validateUserData, validateUserEmail } from '../utils/Utils';
 
 const Login = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -20,26 +22,25 @@ const Login = () => {
             return;
         }
         // Find user with matching email
-        const users = JSON.parse(sessionStorage.getItem('users')) || [];
-        const emailExists = users.some(user => user.email === email);
-        if (!emailExists) {
+        if (validateUserData(email, password)) {
+            // Adjust as per your app's routing
+            setValidated(false);
+            //navigate('/register');
+            alert('Login succesful');
+        } 
+        if(!validateUserEmail(email)) {
             setEmailError('Email not found');
             setValidated(true);
             return;
-        }
-        // Check if password is empty
-        if (!password) {
+        } else if(!password) {
             setPasswordError('Password is required');
             setValidated(true);
             return;
-        }
-        // Check if password is correct
-        if (emailExists.password !== password) {
+        } else {
             setPasswordError('Invalid password');
             setValidated(true);
             return;
         }
-        setValidated(false);  
     };
   
     return (   

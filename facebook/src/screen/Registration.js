@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Registration.css';
+import { saveUserData } from '../utils/Utils';
 
 function Registration() {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ function Registration() {
     agreeTermsError: ''
   });
 
+  // handle user input changes
   const handleChange = (e) => {
     const { name, value, checked } = e.target; // Get the event targt
     setFormData((prevData) => ({
@@ -37,6 +39,7 @@ function Registration() {
     }
   };
 
+  // handle user input image changes
   const handleImageChange = (e) => {
     const file = e.target.files[0]; // Get the first selected file
     if (file) {
@@ -50,53 +53,53 @@ function Registration() {
       reader.readAsDataURL(file); // Read the file as a Data URL
     }
   };
-
+  
+  // handle form submit
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent default form submission
-    //const form = event.currentTarget;
-
+    
+    // Validate form fields not empty
+    const validateField = (field, errorMessage) => {
+      if (!formData[field].trim()) {
+        errors[`${field}Error`] = errorMessage;
+        isValid = false;
+      }
+    };
+  
+    const validateEmail = () => {
+      // Validte email in format <name@gnail.com>
+      if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        errors.emailError = 'Email address is invalid';
+        isValid = false;
+      }
+    };
+  
+    const validatePassword = () => {
+      // Validte password with at least 8 characters long
+      if (formData.password.length < 8) {
+        errors.passwordError = 'Password must be at least 8 characters long';
+        isValid = false;
+        // Validte password has at least 1 lowercase letter, 1 uppercase letter and 1 digit
+      } else if (!/[a-z]/.test(formData.password) || !/[A-Z]/.test(formData.password) || !/\d/.test(formData.password)) {
+        errors.passwordError = 'Password must contain at least one lowercase letter, one uppercase letter, and one digit';
+        isValid = false;
+      }
+    };
+  
     // Validate form fields
     let isValid = true;
     const errors = {};
-
-    if (!formData.firstName.trim()) {
-      errors.firstNameError = 'First name is required';
-      isValid = false;
-    }
-
-    if (!formData.lastName.trim()) {
-      errors.lastNameError = 'Last name is required';
-      isValid = false;
-    }
-
-    if (!formData.email.trim()) {
-      errors.emailError = 'Email address is required';
-      isValid = false;
-      // Validte email in format <name@gnail.com>
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.emailError = 'Email address is invalid';
-      isValid = false;
-    }
-
-    if (!formData.password.trim()) {
-      errors.passwordError = 'Password is required';
-      isValid = false;
-      // Validte password with at least 8 characters long
-    } else if (formData.password.length < 8) {
-      errors.passwordError = 'Password must be at least 8 characters long';
-      isValid = false;
-      // Validte password has at least 1 lowercase letter, 1 uppercase letter and 1 digit
-    } else if (!/[a-z]/.test(formData.password) || !/[A-Z]/.test(formData.password) || !/\d/.test(formData.password)) {
-      errors.passwordError = 'Password must contain at least one lowercase letter, one uppercase letter, and one digit';
-      isValid = false;
-    }
-
+    validateField('firstName', 'First name is required');
+    validateField('lastName', 'Last name is required');
+    validateField('email', 'Email address is required');
+    validateEmail();
+    validateField('password', 'Password is required');
+    validatePassword();
     // Validte confirm password match to password
     if (formData.password !== formData.confirmPassword) {
       errors.confirmPasswordError = 'Passwords do not match';
       isValid = false;
     }
-
     // Validte user agree to terms
     if (!formData.agreeTerms) {
       errors.agreeTermsError = 'You must agree to terms and conditions';
@@ -119,11 +122,7 @@ function Registration() {
         password: formData.password,
         selectedImage: formData.selectedImage
       };
-      const users = JSON.parse(sessionStorage.getItem('users')) || [];
-      users.push(userData);
-      sessionStorage.setItem('users', JSON.stringify(users));
-      //alert('User registered successfully');
-      
+      saveUserData(userData);    
       // Clean
       setFormData({
         firstName: '',
@@ -134,10 +133,8 @@ function Registration() {
         agreeTerms: false,
         selectedImage: null
       });
-
       // Navigate back to the login page
       navigate('/');
-      //submitForm(); // function to submit the form data
 
     } else { // If the form is invalid, display validation feedback
       setValidated(true);
