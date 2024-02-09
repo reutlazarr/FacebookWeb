@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Registration.css';
+import { saveUserData } from '../utils/Utils';
 
 function Registration() {
+  const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -20,22 +22,24 @@ function Registration() {
     agreeTermsError: ''
   });
 
+  // handle user input changes
   const handleChange = (e) => {
-    const { name, value, checked } = e.target;
+    const { name, value, checked } = e.target; // Get the event targt
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value, // Update the names in prevData with thier new value
       [`${name}Error`]: ''
     }));
     if (name === 'agreeTerms') {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: checked,
+        [name]: checked, // Update the checkbox agreeTerms
         [`${name}Error`]: ''
       }));
     }
   };
 
+  // handle user input image changes
   const handleImageChange = (e) => {
     const file = e.target.files[0]; // Get the first selected file
     if (file) {
@@ -49,65 +53,90 @@ function Registration() {
       reader.readAsDataURL(file); // Read the file as a Data URL
     }
   };
-
+  
+  // handle form submit
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent default form submission
-    const form = event.currentTarget;
-
+    
+    // Validate form fields not empty
+    const validateField = (field, errorMessage) => {
+      if (!formData[field].trim()) {
+        errors[`${field}Error`] = errorMessage;
+        isValid = false;
+      }
+    };
+  
+    const validateEmail = () => {
+      // Validte email in format <name@gnail.com>
+      if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        errors.emailError = 'Email address is invalid';
+        isValid = false;
+      }
+    };
+  
+    const validatePassword = () => {
+      // Validte password with at least 8 characters long
+      if (formData.password.length < 8) {
+        errors.passwordError = 'Password must be at least 8 characters long';
+        isValid = false;
+        // Validte password has at least 1 lowercase letter, 1 uppercase letter and 1 digit
+      } else if (!/[a-z]/.test(formData.password) || !/[A-Z]/.test(formData.password) || !/\d/.test(formData.password)) {
+        errors.passwordError = 'Password must contain at least one lowercase letter, one uppercase letter, and one digit';
+        isValid = false;
+      }
+    };
+  
     // Validate form fields
     let isValid = true;
     const errors = {};
-
-    if (!formData.firstName.trim()) {
-      errors.firstNameError = 'First name is required';
-      isValid = false;
-    }
-
-    if (!formData.lastName.trim()) {
-      errors.lastNameError = 'Last name is required';
-      isValid = false;
-    }
-
-    if (!formData.email.trim()) {
-      errors.emailError = 'Email address is required';
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.emailError = 'Email address is invalid';
-      isValid = false;
-    }
-
-    if (!formData.password.trim()) {
-      errors.passwordError = 'Password is required';
-      isValid = false;
-    } else if (formData.password.length < 8) {
-      errors.passwordError = 'Password must be at least 8 characters long';
-      isValid = false;
-    } else if (!/[a-z]/.test(formData.password) || !/[A-Z]/.test(formData.password) || !/\d/.test(formData.password)) {
-      errors.passwordError = 'Password must contain at least one lowercase letter, one uppercase letter, and one digit';
-      isValid = false;
-    }
-
+    validateField('firstName', 'First name is required');
+    validateField('lastName', 'Last name is required');
+    validateField('email', 'Email address is required');
+    validateEmail();
+    validateField('password', 'Password is required');
+    validatePassword();
+    // Validte confirm password match to password
     if (formData.password !== formData.confirmPassword) {
       errors.confirmPasswordError = 'Passwords do not match';
       isValid = false;
     }
-
+    // Validte user agree to terms
     if (!formData.agreeTerms) {
       errors.agreeTermsError = 'You must agree to terms and conditions';
       isValid = false;
     }
 
+    // Set formData with the data and matching erors
     setFormData((prevData) => ({
       ...prevData,
       ...errors
     }));
 
-    if (isValid) {
-      // If the form is valid, reset the validation state and submit the form
+    if (isValid) { // If the form is valid, reset the validation state and submit the form
       setValidated(false);
-      //submitForm(); // Your function to submit the form data
-    } else {
-      // If the form is invalid, display validation feedback
+      // Save user information
+      const userData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        selectedImage: formData.selectedImage
+      };
+      saveUserData(userData);    
+      // Clean
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        agreeTerms: false,
+        selectedImage: null
+      });
+      // Navigate back to the login page
+      navigate('/');
+
+    } else { // If the form is invalid, display validation feedback
       setValidated(true);
     }
   };
@@ -135,6 +164,7 @@ function Registration() {
                   value={formData.firstName}
                   onChange={handleChange}
                   required
+                  autoComplete="First name"
                 />
                 <div className="invalid-feedback">
                   {formData.firstNameError}
@@ -151,6 +181,7 @@ function Registration() {
                   value={formData.lastName}
                   onChange={handleChange}
                   required
+                  autoComplete="Last name"
                 />
                 <div className="invalid-feedback">
                   {formData.lastNameError}
@@ -169,6 +200,7 @@ function Registration() {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  autoComplete="Email address"
                 />
                 <div className="invalid-feedback">
                   {formData.emailError}
@@ -187,6 +219,7 @@ function Registration() {
                   value={formData.password}
                   onChange={handleChange}
                   required
+                  autoComplete="password"
                 />
                 <div className="invalid-feedback">
                   {formData.passwordError}
@@ -205,6 +238,7 @@ function Registration() {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   required
+                  autoComplete="Confirm password"
                 />
                 <div className="invalid-feedback">
                   {formData.confirmPasswordError}
