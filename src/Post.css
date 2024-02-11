@@ -1,0 +1,104 @@
+/* Post.css */
+
+.post-container {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px; /* Reduce margin */
+    padding: 10px; /* Reduce padding */
+    background-color: #fff;
+  }
+  
+  /* .post-header {
+    //margin-bottom: 10px;
+  } */
+  
+ 
+.author-info {
+    display: flex;
+    align-items: center;
+    margin-top: 10px; /* Adjust or remove as necessary */
+  }
+  
+  /* Remove margin-left and margin-top in .post-date and adjust flex properties */
+  .post-author,
+  .post-date {
+    margin-left: 0;
+    margin-top: 4px; /* This is a small gap between the name and the date */
+  }
+  
+  .author-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .post-author {
+    font-weight: bold; /* Makes the username bold */
+    font-size: 17px; /* Adjust the size as needed */
+  }
+  
+  .post-date {
+    font-size: 13px; /* Smaller font size for the date */
+    color: #606770; /* Adjust the color as needed */
+    /* Remove any margin or padding that might push the date away from the username */
+  }
+  
+  .profile-picture {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-top: 3px;
+    margin-left: 5px;
+  }
+  
+  
+  .post-content {
+    margin-top: 10px;
+    margin-left: 6px;
+    display: flex;
+  }
+
+/* Styling for the post image */  
+  .post-image img {
+    margin-top: 10px;
+    max-width: 400px;
+    max-height: 400px;
+    /*height: auto; /* Maintain aspect ratio */
+    /* Add additional styles as needed */
+  }
+  
+  .comment-input{
+    width: 350px;
+    margin-bottom: 8px;
+    margin-top: 10px;
+    padding: 10px; /* Add padding */
+    font-size: 16px; /* Add font size */
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 5px; /* Add border radius */
+    
+  }
+
+/* Post.css */
+.post-actions {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+  
+  .post-actions button {
+    border: none;
+    background: none;
+    color: #606770;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .post-actions button:hover {
+    background-color: #f0f2f5;
+  }
+  
