@@ -7,10 +7,22 @@ import initialPosts from "../data/db.json";
 import Menu from "../feed_components/Menu";
 import TopBar from "../feed_components/TopBar";
 
-function Feed({ user}) {
+function Feed() {
   const [postsList, setPostsList] = useState(initialPosts);
   const [newPostContent, setNewPostContent] = useState("");
   const [postImage, setPostImage] = useState(null);
+  const [user, setUser] = useState(null);
+
+const handleLogin = () => {
+  const loggedInUser = {
+    username: "Reut Lazar",
+    name: "Reut Lazar",
+    email: "user@example.com",
+    profilePicture:
+      "https://images.unsplash.com/photo-1446329813274-7c9036bd9a1f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8bmF0dXJlfHx8fHx8MTcwNzU1NzMxOQ&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080",
+  };
+  setUser(loggedInUser);
+};
 
   const addPost = () => {
     const post = {
@@ -40,7 +52,7 @@ function Feed({ user}) {
 
   return (
     <div className="feed-container">
-      <TopBar user={user} />
+      <TopBar user={user} onLogin={handleLogin}/>
       <div className="main-content">
         <Menu />
         <div className="posts-container">
