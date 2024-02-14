@@ -1,7 +1,7 @@
 //import logo from './logo.svg';
 import './App.css';
-import Login from './screen/Login';
-import Registration from './screen/Registration';
+import Login from './screens/Login';
+import Registration from './screens/Registration';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -11,6 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Registration />} />
+          <Route path='/signIn' element={Feed />} />
         </Routes>
       </BrowserRouter>
     </div>
