@@ -3,12 +3,6 @@
   text-align: center;
   display: flex;
   flex-direction: column;
+  background-color:#f7f7f7;
 }
 
-.Main {
-  display: flex;
-  flex-direction: row;
-  text-align: center;
-}
-
-/* Global styles for animations, headers, links can remain here if they apply to the entire app */
