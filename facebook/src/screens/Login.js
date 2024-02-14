@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
-import { validateUserData, validateUserEmail } from '../utils/Utils';
+import { getUser, validateUserData, validateUserEmail } from '../utils/Utils';
 
 const Login = () => {
+    const [user, setUser] = useState(null);
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -25,8 +26,9 @@ const Login = () => {
         if (validateUserData(email, password)) {
             // Adjust as per your app's routing
             setValidated(false);
-            //navigate('/register');
-            alert('Login succesful');
+            setUser(getUser(email, password));
+            navigate('/signIn', { state: { user: user } });
+            //alert('Login succesful');
         } 
         if(!validateUserEmail(email)) {
             setEmailError('Email not found');

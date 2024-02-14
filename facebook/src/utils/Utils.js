@@ -14,3 +14,8 @@ export const saveUserData = (userData) => {
     const users = JSON.parse(sessionStorage.getItem('users')) || [];
     return users.some(user => user.email === email);
   }
+
+  export const getUser = (email, password) => {
+    const users = JSON.parse(sessionStorage.getItem('users')) || [];
+    return users.find(user => user.email === email && user.password === password);
+  }
