@@ -25,9 +25,9 @@ function TopBar({ user, onLogin }) {
           <i className="bi bi-controller"></i>
         </a>
         <div className="menu-circle">
-        <a href="#" className="left-menu-item" title="Menu">
-          <i className="bi bi-list"></i>
-        </a>
+          <a href="#" className="left-menu-item" title="Menu">
+            <i className="bi bi-list"></i>
+          </a>
         </div>
         <a href="#" className="left-menu-item" title="Messenger">
           <i className="bi bi-chat-fill"></i>
