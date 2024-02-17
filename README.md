@@ -1,4 +1,5 @@
 Welcome to our Facebook page!
+
 To initiate the project, navigate to the project folder and execute:
 npm start
 Upon accessing the page, you can register for our social network, log in, and begin posting content, uploading photos, commenting on friends' posts, and liking posts! 
