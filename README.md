@@ -1,4 +1,4 @@
-### Welcome to our Facebook page!
+### Welcome to our Facebook site!
 
 To initiate the project, navigate to the project folder and execute:
 ### `npm start`
