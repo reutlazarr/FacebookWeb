@@ -6,8 +6,7 @@
     border-radius: 8px;
     margin-bottom: 10px; /* Reduce margin */
     padding: 10px; /* Reduce padding */
-    background-color: #fff;
-    width: 470px;
+    /* background-color: white; */
   }
   
 .author-info {
@@ -100,13 +99,72 @@
     color: blue!important; /* Ensures both text and icon are blue */
   }
   
-  .delete-and-edit {
+  .delete {
     position: absolute;
     top: 0;
     right: 0;
-    /* Additional styles for the delete button */
     padding: 5px;
-    margin: 5px;
- 
+    margin: 5px; 
   }
- 
+
+  .edit{
+    position: absolute;
+    top: 0;
+    right:30px;
+    padding: 5px;
+    margin: 5px; 
+  }
+
+  .delete-button{
+    border: 1px solid white; /* Adds a white border */
+  }
+
+  .edit-button{
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .edit-button:hover{
+    opacity: 0.8;
+  }
+
+
+  
+  /* If you also want to ensure the button has no background and the icon (X) color is styled */
+  .delete-button, .edit-button {
+    background: none;
+    color: #606770; /* Example color, adjust as needed */
+    border: 1px solid white; /* Adds a white border */
+  }
+
+  /* Adjust the hover state as well */
+.delete-button:hover , .edit-button:hover{
+  background-color: rgba(149, 159, 243, 0.2); /* Example hover background */
+}
+
+
+.submit-comment {
+  background-color: #007bff; /* Bootstrap primary blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-comment:hover {
+  background-color: #0056b3; /* A darker shade of blue */
+}
+
+.edit-textarea {
+  width: 100%;
+  height: 100px;
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+

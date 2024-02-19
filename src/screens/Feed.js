@@ -6,33 +6,32 @@ import "./Feed.css";
 import initialPosts from "../data/db.json";
 import Menu from "../feed_components/Menu";
 import TopBar from "../feed_components/TopBar";
+import { redirect } from "react-router-dom";
 
-function Feed() {
+function Feed({ user }) {
   const [postsList, setPostsList] = useState(initialPosts);
   const [newPostContent, setNewPostContent] = useState("");
   const [postImage, setPostImage] = useState(null);
-  const [user, setUser] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-const handleLogin = () => {
-  const loggedInUser = {
-    username: "Reut Lazar",
-    name: "Reut Lazar",
-    email: "user@example.com",
-    profilePicture:
-      "https://images.unsplash.com/photo-1446329813274-7c9036bd9a1f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8bmF0dXJlfHx8fHx8MTcwNzU1NzMxOQ&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080",
+  if (!user) {
+    redirect("/register");
+  }
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode); // Toggle the dark mode state
   };
-  setUser(loggedInUser);
-};
 
   const addPost = () => {
     const post = {
       id: uuidv4(),
       content: newPostContent,
-      userName: user.username,
+      userName: user.name,
       postDate: new Date().toLocaleDateString(),
       postImage: postImage ? URL.createObjectURL(postImage) : null,
       comments: [],
       userProfilePicture: user.profilePicture,
+      isNewPost: true,
     };
     setPostsList([post, ...postsList]);
     setNewPostContent("");
@@ -50,9 +49,29 @@ const handleLogin = () => {
     setPostsList(updatedPosts);
   };
 
+  const updatePost = (postId, updatedContent, updatedImage) => {
+    const updatedPosts = postsList.map((post) => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          content: updatedContent,
+          postImage: updatedImage
+            ? URL.createObjectURL(updatedImage)
+            : post.postImage,
+        };
+      }
+      return post;
+    });
+    setPostsList(updatedPosts);
+  };
+
   return (
-    <div className="feed-container">
-      <TopBar user={user} onLogin={handleLogin}/>
+    <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
+      <TopBar
+        user={user}
+        onToggleDarkMode={toggleDarkMode}
+        isDarkMode={isDarkMode}
+      />
       <div className="main-content">
         <Menu />
         <div className="posts-container">
@@ -62,7 +81,11 @@ const handleLogin = () => {
             placeholder="What's on your mind?"
             className="post-input"
           />
-          <label htmlFor="file-upload" className="file-upload-label">
+          <label
+            htmlFor="file-upload"
+            className="file-upload-label"
+            title="Upload photo"
+          >
             <i className="bi bi-images"></i>
             <input
               id="file-upload"
@@ -81,6 +104,7 @@ const handleLogin = () => {
               {...post}
               user={user}
               onDelete={() => deletePost(post.id)}
+              onUpdate={updatePost}
             />
           ))}
         </div>

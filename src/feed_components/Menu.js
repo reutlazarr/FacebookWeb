@@ -25,7 +25,7 @@ function Menu() {
       </a>
       <a href="#" className="menu-item">
         <i className="bi bi-clipboard-data"></i>
-        <span>Ads Manager</span> {/* Corrected typo */}
+        <span>Ads Manager</span>
       </a>
     </div>
   );
