@@ -30,7 +30,7 @@
     text-decoration: none; /* Remove underline from links */
   }
   
-  .bi {
+  .bi-person-circle, .bi-clock-history, .bi-bookmark-fill, .bi-person-video, .bi-shop-window, .bi-clipboard-data{
     margin-right: 12px;
     margin-top: 10px;
   }
