@@ -1,7 +1,7 @@
 ### Welcome to our Facebook site!
 
 To initiate the project, navigate to the project folder and first install a set of scripts and configurations used by Create React App:
-### 'npm install react-scripts --save'
+### `npm install react-scripts --save`
 
 Then, you are ready to start exploring our web application by executing:
 ### `npm start`
