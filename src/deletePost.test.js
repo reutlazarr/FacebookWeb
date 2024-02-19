@@ -1,4 +1,6 @@
 import { deletePost } from './utils/Utils';
+import '@testing-library/jest-dom';
+
 
 describe('deletePost', () => {
   it('should remove a post by its ID', () => {

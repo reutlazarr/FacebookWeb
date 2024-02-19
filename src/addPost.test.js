@@ -1,4 +1,6 @@
 import { addPost } from './utils/Utils';
+import '@testing-library/jest-dom';
+
 
 describe('addPost', () => {
     it('should add a new post to the posts array', () => {
