@@ -53,7 +53,7 @@ const Login = () => {
                 </div>
                 <div className="col-sm-6">
                     <div className="card text-center shadow p-4 mb-4 login-card">
-                        <form noValidate validated={validated} onSubmit={handleSubmit}>
+                        <form noValidate {...(validated ? { validated: 'true' } : {})} onSubmit={handleSubmit}>
                             <div class="card-body">
                                 <p className="form-floating mb-3">
                                     <input

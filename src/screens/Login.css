@@ -1,5 +1,6 @@
 .container {
     flex-direction: row;
+    padding: 80px;
 }
 
 .display-3 {
