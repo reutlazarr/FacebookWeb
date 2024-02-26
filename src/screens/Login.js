@@ -12,11 +12,16 @@ const Login = () => {
     const [passwordError, setPasswordError] = useState('');
     const [validated, setValidated] = useState(false);
   
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setEmailError('');
         setPasswordError('');
         
+        const credentials = {
+            email: email,
+            password: password
+        }
+
         if (!email) {
             setEmailError('Email is required');
             setValidated(true);
@@ -30,19 +35,41 @@ const Login = () => {
             navigate('/signIn', { state: { user: user } });
             //alert('Login succesful');
         } 
-        if(!validateUserEmail(email)) {
-            setEmailError('Email not found');
-            setValidated(true);
-            return;
-        } else if(!password) {
-            setPasswordError('Password is required');
-            setValidated(true);
-            return;
-        } else {
-            setPasswordError('Invalid password');
-            setValidated(true);
-            return;
+        try {
+            const response = await fetch('http://foo.com/api/tokens', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(credentials),
+            });
+            // if (!response.ok) {
+            //     throw new Error('Failed to log in');
+            // }
+            const data = await response.json();
+            if (data.token) {
+                localStorage.setItem('jwt', data.token); // Store the token
+              } else {
+                console.error('Token not found in response');
+              }
+            console.log(data); // Process the response data, e.g., save the token
+            // Redirect or manage login state
+        } catch (error) {
+            console.error(error);
         }
+        // if(!validateUserEmail(email)) {
+        //     setEmailError('Email not found');
+        //     setValidated(true);
+        //     return;
+        // } else if(!password) {
+        //     setPasswordError('Password is required');
+        //     setValidated(true);
+        //     return;
+        // } else {
+        //     setPasswordError('Invalid password');
+        //     setValidated(true);
+        //     return;
+        // }
     };
   
     return (   

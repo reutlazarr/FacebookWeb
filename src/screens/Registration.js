@@ -62,7 +62,7 @@ function Registration({ setUser }) {
   };
 
   // handle form submit
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission
 
     // Validate form fields not empty
@@ -133,9 +133,28 @@ function Registration({ setUser }) {
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
-        selectedImage: formData.selectedImage,
+        userName: formData.firstName + formData.lastName,
+        userProfile: formData.selectedImage,
       };
       saveUserData(userData);
+      
+      try {
+        const response = await fetch('http://foo.com/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+        if (!response.ok) {
+            throw new Error('Failed to register');
+        }
+        const data = await response.json();
+        console.log(data); // Process the response data
+        // Redirect or clear form here
+    } catch (error) {
+        console.error(error);
+    }
       // Clean
       setFormData({
         firstName: "",
