@@ -46,13 +46,13 @@ const Login = () => {
             // if (!response.ok) {
             //     throw new Error('Failed to log in');
             // }
-            const data = await response.json();
-            if (data.token) {
-                localStorage.setItem('jwt', data.token); // Store the token
+            const json = await response.json();
+            if (json.token) {
+                localStorage.setItem('jwt', json.token); // Store the token
               } else {
                 console.error('Token not found in response');
               }
-            console.log(data); // Process the response data, e.g., save the token
+            console.log(json); // Process the response data, e.g., save the token
             // Redirect or manage login state
         } catch (error) {
             console.error(error);
