@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TopBar.css";
 
-function TopBar({ user, onToggleDarkMode, isDarkMode }) {
+function TopBar({ user, onToggleDarkMode, isDarkMode, token }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate(); // Hook for navigation
 

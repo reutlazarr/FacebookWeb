@@ -8,7 +8,7 @@ import Menu from "../feed_components/Menu";
 import TopBar from "../feed_components/TopBar";
 import { redirect } from "react-router-dom";
 
-function Feed({ user }) {
+function Feed({ user, token }) {
   const [postsList, setPostsList] = useState(initialPosts);
   const [newPostContent, setNewPostContent] = useState("");
   const [postImage, setPostImage] = useState(null);
@@ -71,6 +71,7 @@ function Feed({ user }) {
         user={user}
         onToggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
+        token={token}
       />
       <div className="main-content">
         <Menu />
