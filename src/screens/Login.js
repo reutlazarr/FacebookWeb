@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { getUser, validateUserData, validateUserEmail } from '../utils/Utils';
 
-const Login = ({ setUser }) => {
+const Login = ({ setUser, setToken }) => {
     //const [user, setUser] = useState(null);
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
@@ -34,49 +34,50 @@ const Login = ({ setUser }) => {
             return;
         }
         // Find user with matching email
-        if (validateUserData(email, password)) {
-            // Adjust as per your app's routing
+        // if (validateUserData(email, password)) {
+        //     // Adjust as per your app's routing
+        //     setValidated(false);
+        //     setFinalUser(setUser, getUser(email, password))
+        //     //setUser(getUser(email, password));
+        //     navigate('/signIn');
+        //     //alert('Login succesful');
+        // } 
+        try {
+            const response = await fetch('http://localhost:8080/api/tokens', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(credentials),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to log in');
+            }
+            const json = await response.json();
+
+            console.log(json); // Process the response data, e.g., save the token
+            console.log(json.token);
+            setToken(json.token);
             setValidated(false);
-            setFinalUser(setUser, getUser(email, password))
-            //setUser(getUser(email, password));
+            
             navigate('/signIn');
-            //alert('Login succesful');
-        } 
-        // try {
-        //     const response = await fetch('http://foo.com/api/tokens', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(credentials),
-        //     });
-        //     // if (!response.ok) {
-        //     //     throw new Error('Failed to log in');
-        //     // }
-        //     const json = await response.json();
-        //     if (json.token) {
-        //         localStorage.setItem('jwt', json.token); // Store the token
-        //       } else {
-        //         console.error('Token not found in response');
-        //       }
-        //     console.log(json); // Process the response data, e.g., save the token
-        //     // Redirect or manage login state
-        // } catch (error) {
-        //     console.error(error);
-        // }
-        if(!validateUserEmail(email)) {
-            setEmailError('Email not found');
-            setValidated(true);
-            return;
-        } else if(!password) {
-            setPasswordError('Password is required');
-            setValidated(true);
-            return;
-        } else {
-            setPasswordError('Invalid password');
-            setValidated(true);
-            return;
+            // Redirect or manage login state
+        } catch (error) {
+            console.error(error);
         }
+        // if(!validateUserEmail(email)) {
+        //     setEmailError('Email not found');
+        //     setValidated(true);
+        //     return;
+        // } else if(!password) {
+        //     setPasswordError('Password is required');
+        //     setValidated(true);
+        //     return;
+        // } else {
+        //     setPasswordError('Invalid password');
+        //     setValidated(true);
+        //     return;
+        // }
     };
   
     return (   
@@ -88,7 +89,7 @@ const Login = ({ setUser }) => {
                 <div className="col-sm-6">
                     <div className="card text-center shadow p-4 mb-4 login-card">
                         <form noValidate {...(validated ? { validated: 'true' } : {})} onSubmit={handleSubmit}>
-                            <div class="card-body">
+                            <div className="card-body">
                                 <p className="form-floating mb-3">
                                     <input
                                         type="email"

@@ -22,13 +22,6 @@ function Registration() {
     agreeTermsError: "",
   });
 
-  function setFinalUser(setUser, formData) {
-    setUser({
-      name: formData.firstName + " " + formData.lastName,
-      image: formData.selectedImage,
-    });
-  }
-
   // handle user input changes
   const handleChange = (e) => {
     const { name, value, checked } = e.target; // Get the event targt
@@ -129,32 +122,32 @@ function Registration() {
       setValidated(false);
       // Save user information
       const userData = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        // firstName: formData.firstName,
+        // lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
         userName: formData.firstName + formData.lastName,
         userProfile: formData.selectedImage,
       };
-      saveUserData(userData);
+      //saveUserData(userData);
       
-    //   try {
-    //     const response = await fetch('http://foo.com/api/users', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(userData),
-    //     });
-    //     if (!response.ok) {
-    //         throw new Error('Failed to register');
-    //     }
-    //     const data = await response.json();
-    //     console.log(data); // Process the response data
-    //     // Redirect or clear form here
-    // } catch (error) {
-    //     console.error(error);
-    // }
+      try {
+        const response = await fetch('http://localhost:8080/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+        if (!response.ok) {
+            throw new Error('Failed to register');
+        }
+        const data = await response.json();
+        console.log(data); // Process the response data
+        // Redirect or clear form here
+      } catch (error) {
+          console.error(error);
+      }
       // Clean
       setFormData({
         firstName: "",
@@ -348,13 +341,7 @@ function Registration() {
             </div>
             <div className="col-12">
               <div className="text-center">
-                <button
-                  className="btn btn-success"
-                  type="submit"
-                  // onClick={() => setFinalUser(setUser, formData)}
-                >
-                  Sign Up
-                </button>
+                <button className="btn btn-success" type="submit">Sign Up</button>
               </div>
             </div>
           </form>
