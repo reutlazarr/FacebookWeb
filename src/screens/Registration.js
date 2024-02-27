@@ -126,7 +126,7 @@ function Registration() {
         // lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
-        userName: formData.firstName + formData.lastName,
+        userName: formData.firstName + " " + formData.lastName,
         userProfile: formData.selectedImage,
       };
       //saveUserData(userData);

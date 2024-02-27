@@ -56,10 +56,10 @@ const Login = ({ setUser, setToken }) => {
             const json = await response.json();
 
             console.log(json); // Process the response data, e.g., save the token
-            console.log(json.token);
-            setToken(json.token);
+            //console.log(json.token);
+            setToken(json);
             setValidated(false);
-            
+
             navigate('/signIn');
             // Redirect or manage login state
         } catch (error) {

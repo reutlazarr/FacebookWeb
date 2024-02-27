@@ -1,11 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TopBar.css";
 
-function TopBar({ user, onToggleDarkMode, isDarkMode, token }) {
+function TopBar({ onToggleDarkMode, isDarkMode, token }) {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate(); // Hook for navigation
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!token) return; // If no token is provided, do not attempt to fetch user
+
+      try {
+        console.log(token);
+        console.log(token.token);
+        const response = await fetch("http://localhost:8080/api/users/:id", {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token.token}` // Include the token in the request
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data)
+          console.log(data.user)
+          setUser(data.user); // Assuming the response contains an object with the user key
+        } else {
+          // Handle errors, e.g., token expired, user not found
+          console.error("Failed to fetch user");
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+    fetchUser();
+  }, [token]); // Dependency on token to refetch if it changes
 
   const handleLogout = () => {
     // Perform logout logic here (e.g., clearing local storage, resetting user state)

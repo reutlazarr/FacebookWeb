@@ -68,7 +68,7 @@ function Feed({ user, token }) {
   return (
     <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
       <TopBar
-        user={user}
+        // user={user}
         onToggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
         token={token}
