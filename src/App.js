@@ -14,10 +14,10 @@ function App() {
     <div className="container-fluid">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Login setUser={setUser} />} />
           <Route
             path="/register"
-            element={<Registration setUser={setUser} />}
+            element={<Registration />}
           />
           <Route path="/signIn" element={<Feed user={user} />} />
         </Routes>

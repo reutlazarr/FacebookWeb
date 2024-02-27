@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Registration.css";
 import { saveUserData } from "../utils/Utils";
 
-function Registration({ setUser }) {
+function Registration() {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
@@ -138,23 +138,23 @@ function Registration({ setUser }) {
       };
       saveUserData(userData);
       
-      try {
-        const response = await fetch('http://foo.com/api/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        });
-        if (!response.ok) {
-            throw new Error('Failed to register');
-        }
-        const data = await response.json();
-        console.log(data); // Process the response data
-        // Redirect or clear form here
-    } catch (error) {
-        console.error(error);
-    }
+    //   try {
+    //     const response = await fetch('http://foo.com/api/users', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify(userData),
+    //     });
+    //     if (!response.ok) {
+    //         throw new Error('Failed to register');
+    //     }
+    //     const data = await response.json();
+    //     console.log(data); // Process the response data
+    //     // Redirect or clear form here
+    // } catch (error) {
+    //     console.error(error);
+    // }
       // Clean
       setFormData({
         firstName: "",
@@ -351,7 +351,7 @@ function Registration({ setUser }) {
                 <button
                   className="btn btn-success"
                   type="submit"
-                  onClick={() => setFinalUser(setUser, formData)}
+                  // onClick={() => setFinalUser(setUser, formData)}
                 >
                   Sign Up
                 </button>

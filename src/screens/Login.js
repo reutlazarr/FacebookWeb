@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { getUser, validateUserData, validateUserEmail } from '../utils/Utils';
 
-const Login = () => {
-    const [user, setUser] = useState(null);
+const Login = ({ setUser }) => {
+    //const [user, setUser] = useState(null);
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -12,6 +12,12 @@ const Login = () => {
     const [passwordError, setPasswordError] = useState('');
     const [validated, setValidated] = useState(false);
   
+    function setFinalUser(setUser, userData) {
+        setUser({
+          name: userData.firstName + " " + userData.lastName,
+          image: userData.userProfile,
+        });
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
         setEmailError('');
@@ -31,45 +37,46 @@ const Login = () => {
         if (validateUserData(email, password)) {
             // Adjust as per your app's routing
             setValidated(false);
-            setUser(getUser(email, password));
-            navigate('/signIn', { state: { user: user } });
+            setFinalUser(setUser, getUser(email, password))
+            //setUser(getUser(email, password));
+            navigate('/signIn');
             //alert('Login succesful');
         } 
-        try {
-            const response = await fetch('http://foo.com/api/tokens', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(credentials),
-            });
-            // if (!response.ok) {
-            //     throw new Error('Failed to log in');
-            // }
-            const json = await response.json();
-            if (json.token) {
-                localStorage.setItem('jwt', json.token); // Store the token
-              } else {
-                console.error('Token not found in response');
-              }
-            console.log(json); // Process the response data, e.g., save the token
-            // Redirect or manage login state
-        } catch (error) {
-            console.error(error);
-        }
-        // if(!validateUserEmail(email)) {
-        //     setEmailError('Email not found');
-        //     setValidated(true);
-        //     return;
-        // } else if(!password) {
-        //     setPasswordError('Password is required');
-        //     setValidated(true);
-        //     return;
-        // } else {
-        //     setPasswordError('Invalid password');
-        //     setValidated(true);
-        //     return;
+        // try {
+        //     const response = await fetch('http://foo.com/api/tokens', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify(credentials),
+        //     });
+        //     // if (!response.ok) {
+        //     //     throw new Error('Failed to log in');
+        //     // }
+        //     const json = await response.json();
+        //     if (json.token) {
+        //         localStorage.setItem('jwt', json.token); // Store the token
+        //       } else {
+        //         console.error('Token not found in response');
+        //       }
+        //     console.log(json); // Process the response data, e.g., save the token
+        //     // Redirect or manage login state
+        // } catch (error) {
+        //     console.error(error);
         // }
+        if(!validateUserEmail(email)) {
+            setEmailError('Email not found');
+            setValidated(true);
+            return;
+        } else if(!password) {
+            setPasswordError('Password is required');
+            setValidated(true);
+            return;
+        } else {
+            setPasswordError('Invalid password');
+            setValidated(true);
+            return;
+        }
     };
   
     return (   
