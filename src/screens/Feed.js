@@ -1,5 +1,5 @@
 // Feed.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Post from "../feed_components/Post";
 import { v4 as uuidv4 } from "uuid";
 import "./Feed.css";
@@ -14,9 +14,53 @@ function Feed({ user, token }) {
   const [postImage, setPostImage] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  if (!user) {
+  const [profile, setProfile] = useState(null);
+  const [error, setError] = useState('');
+
+  function setProfileUser(setProfile, data) {
+    setProfile({
+      name: data.name,
+      profilePicture: data. profilePicture
+    });
+}
+
+
+  if (!token) {
     redirect("/register");
   }
+
+  useEffect(() => {
+    //console.log(id);
+    const fetchUser = async () => {
+      if (!token) return; // If no token is provided, do not attempt to fetch user
+      try {
+        console.log("Fetching user profile...");
+        console.log(token);
+        console.log(user.email);
+        const response = await fetch(`http://localhost:8080/api/users/${user.email}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token}` // Include the token in the request
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data)
+        setProfileUser(setProfile, data);
+        //setProfile(data); // Assuming the response contains an object with the user key
+        console.log("profile");
+        console.log({ profile });
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+    fetchUser();
+
+  }, [token, user]); // Dependency on token to refetch if it changes
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode); // Toggle the dark mode state
@@ -68,7 +112,7 @@ function Feed({ user, token }) {
   return (
     <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
       <TopBar
-        // user={user}
+        profiler={profile}
         onToggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
         token={token}

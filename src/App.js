@@ -7,10 +7,7 @@ import { useState } from "react";
 
 function App() {
   const [token, setToken] = useState(null);
-  const [user, setUser] = useState({
-    name: "",
-    image: null,
-  });
+  const [user, setUser] = useState({ email: "" });
   return (
     <div className="container-fluid">
       <BrowserRouter>

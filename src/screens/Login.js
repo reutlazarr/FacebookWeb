@@ -12,10 +12,9 @@ const Login = ({ setUser, setToken }) => {
     const [passwordError, setPasswordError] = useState('');
     const [validated, setValidated] = useState(false);
   
-    function setFinalUser(setUser, userData) {
+    function setFinalUser(setUser, credentials) {
         setUser({
-          name: userData.firstName + " " + userData.lastName,
-          image: userData.userProfile,
+          email: credentials.email
         });
     }
     const handleSubmit = async (e) => {
@@ -55,9 +54,11 @@ const Login = ({ setUser, setToken }) => {
             }
             const json = await response.json();
 
-            console.log(json); // Process the response data, e.g., save the token
-            //console.log(json.token);
-            setToken(json);
+            console.log("login " + json.token); // Process the response data, e.g., save the token
+            console.log("login " + credentials.email);
+            setToken(json.token);
+            setFinalUser(setUser, credentials);
+            //setUser(credentials.email);
             setValidated(false);
 
             navigate('/signIn');
