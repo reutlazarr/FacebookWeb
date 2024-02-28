@@ -50,6 +50,11 @@ const Login = ({ setUser, setToken }) => {
                 body: JSON.stringify(credentials),
             });
             if (!response.ok) {
+                if (response.status === 409) {
+                    setEmailError('Email not found');
+                    setValidated(true);
+                    return;
+                }
                 throw new Error('Failed to log in');
             }
             const json = await response.json();
