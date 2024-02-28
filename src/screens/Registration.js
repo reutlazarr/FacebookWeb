@@ -118,8 +118,7 @@ function Registration() {
     }));
 
     if (isValid) {
-      // If the form is valid, reset the validation state and submit the form
-      setValidated(false);
+      
       // Save user information
       const userData = {
         // firstName: formData.firstName,
@@ -139,31 +138,42 @@ function Registration() {
             },
             body: JSON.stringify(userData),
         });
-        if (!response.ok) {
+        if (!response.ok) { 
+          if (response.status === 409) {
+            errors.emailError = "Email already exists. Please use a different email.";
+            throw new Error('Email already exists');
+          } else {
             throw new Error('Failed to register');
+          }
         }
         const data = await response.json();
         console.log(data); // Process the response data
-        // Redirect or clear form here
-      } catch (error) {
-          console.error(error);
-      }
-      // Clean
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        agreeTerms: false,
-        selectedImage: null,
-      });
-      // Navigate back to the login page
-      navigate("/");
-    } else {
-      // If the form is invalid, display validation feedback
-      setValidated(true);
-    }
+        // If the form is valid, reset the validation state and submit the form
+        setValidated(false);
+        // Clean
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          agreeTerms: false,
+          selectedImage: null,
+        });
+        // Navigate back to the login page
+        navigate("/");
+        } catch (error) {
+            console.error(error);
+            isValid = false;
+             // Set formData with the data and matching erors
+            setFormData((prevData) => ({
+              ...prevData,
+              ...errors,
+            }));
+        }
+    } 
+    // If the form is invalid, display validation feedback
+    setValidated(true);
   };
 
   return (

@@ -23,8 +23,7 @@ function Feed({ user, token }) {
     });
 }
 
-
-  if (!token) {
+  if (!token || !user) {
     redirect("/register");
   }
 
