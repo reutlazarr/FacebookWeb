@@ -1,42 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TopBar.css";
 
-function TopBar({ onToggleDarkMode, isDarkMode, token }) {
+function TopBar({ profile, onToggleDarkMode, isDarkMode }) {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [user, setUser] = useState(null);
+  //const [user, setUser] = useState(null);
   const navigate = useNavigate(); // Hook for navigation
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!token) return; // If no token is provided, do not attempt to fetch user
-
-      try {
-        console.log(token);
-        console.log(token.token);
-        const response = await fetch("http://localhost:8080/api/users/:id", {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `bearer ${token.token}` // Include the token in the request
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data)
-          console.log(data.user)
-          setUser(data.user); // Assuming the response contains an object with the user key
-        } else {
-          // Handle errors, e.g., token expired, user not found
-          console.error("Failed to fetch user");
-        }
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-    fetchUser();
-  }, [token]); // Dependency on token to refetch if it changes
 
   const handleLogout = () => {
     // Perform logout logic here (e.g., clearing local storage, resetting user state)
@@ -76,7 +45,7 @@ function TopBar({ onToggleDarkMode, isDarkMode, token }) {
         <a href="#" className="left-menu-item" title="Notifications">
           <i className="bi bi-bell-fill"></i>
         </a>
-        {user && (
+        {profile && (
           <div className="dropdown">
             <button
               className="btn btn-secondary dropdown-toggle"
@@ -86,11 +55,11 @@ function TopBar({ onToggleDarkMode, isDarkMode, token }) {
               aria-expanded="false"
             >
               <img
-                src={user.image}
+                src={profile.profilePicture}
                 alt="profile"
                 className="top-bar-profile-picture"
               />
-              {user.name}
+              {profile.name}
             </button>
             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
               <li>

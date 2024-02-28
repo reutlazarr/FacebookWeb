@@ -15,7 +15,6 @@ function Feed({ user, token }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const [profile, setProfile] = useState(null);
-  const [error, setError] = useState('');
 
   function setProfileUser(setProfile, data) {
     setProfile({
@@ -53,7 +52,8 @@ function Feed({ user, token }) {
         setProfileUser(setProfile, data);
         //setProfile(data); // Assuming the response contains an object with the user key
         console.log("profile");
-        console.log({ profile });
+        console.log(profile);
+        console.log(profile.name);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -112,10 +112,9 @@ function Feed({ user, token }) {
   return (
     <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
       <TopBar
-        profiler={profile}
+        profile={profile}
         onToggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
-        token={token}
       />
       <div className="main-content">
         <Menu />
