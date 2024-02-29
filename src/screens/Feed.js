@@ -6,25 +6,29 @@ import "./Feed.css";
 import initialPosts from "../data/db.json";
 import Menu from "../feed_components/Menu";
 import TopBar from "../feed_components/TopBar";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Feed({ user }) {
+  const navigate = useNavigate();
   const [postsList, setPostsList] = useState(initialPosts);
   const [newPostContent, setNewPostContent] = useState("");
   const [postImage, setPostImage] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [profile, setProfile] = useState(null);
 
-  if (!user) {
-    redirect("/register");
-  }
-
   function setProfileUser(setProfile, data) {
     setProfile({
       name: data.name,
-      profilePicture: data. profilePicture
+      profilePicture: data.profilePicture
     });
   }
+
+  // This ensures the feed will display only if the user signIn and have a token
+  useEffect(() => {
+    if (!user.token) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -56,7 +60,6 @@ function Feed({ user }) {
       }
     };
     fetchUser();
-
   }, [user.token, user.email]); // Dependency on token to refetch if it changes
 
   const toggleDarkMode = () => {
