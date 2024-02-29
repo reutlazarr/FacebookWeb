@@ -8,38 +8,36 @@ import Menu from "../feed_components/Menu";
 import TopBar from "../feed_components/TopBar";
 import { redirect } from "react-router-dom";
 
-function Feed({ user, token }) {
+function Feed({ user }) {
   const [postsList, setPostsList] = useState(initialPosts);
   const [newPostContent, setNewPostContent] = useState("");
   const [postImage, setPostImage] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
-
   const [profile, setProfile] = useState(null);
+
+  if (!user) {
+    redirect("/register");
+  }
 
   function setProfileUser(setProfile, data) {
     setProfile({
       name: data.name,
       profilePicture: data. profilePicture
     });
-}
-
-  if (!token || !user) {
-    redirect("/register");
   }
 
   useEffect(() => {
-    //console.log(id);
     const fetchUser = async () => {
-      if (!token) return; // If no token is provided, do not attempt to fetch user
+      if (!user.token) return; // If no token is provided, do not attempt to fetch user
       try {
         console.log("Fetching user profile...");
-        console.log(token);
+        console.log(user.token);
         console.log(user.email);
         const response = await fetch(`http://localhost:8080/api/users/${user.email}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `bearer ${token}` // Include the token in the request
+            'Authorization': `bearer ${user.token}` // Include the token in the request
           },
         });
 
@@ -51,7 +49,7 @@ function Feed({ user, token }) {
         setProfileUser(setProfile, data);
         //setProfile(data); // Assuming the response contains an object with the user key
         console.log("profile");
-        console.log(profile);
+        console.log({profile});
         console.log(profile.name);
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -59,7 +57,7 @@ function Feed({ user, token }) {
     };
     fetchUser();
 
-  }, [token, user]); // Dependency on token to refetch if it changes
+  }, [user.token, user.email]); // Dependency on token to refetch if it changes
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode); // Toggle the dark mode state

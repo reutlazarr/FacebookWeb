@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { getUser, validateUserData, validateUserEmail } from '../utils/Utils';
 
-const Login = ({ setUser, setToken }) => {
+const Login = ({ setUser }) => {
     const navigate = useNavigate();
     const [validated, setValidated] = useState(false);
     const [formData, setFormData] = useState({
@@ -13,9 +13,10 @@ const Login = ({ setUser, setToken }) => {
         passwordError: "",
     });
   
-    function setFinalUser(setUser, credentials) {
+    function setFinalUser(setUser, userData, json) {
         setUser({
-          email: credentials.email
+          email: userData.email,
+          token: json.token
         });
     }
 
@@ -78,8 +79,8 @@ const Login = ({ setUser, setToken }) => {
     
                 console.log("login " + json.token); // Process the response data, e.g., save the token
                 console.log("login " + userData.email);
-                setToken(json.token);
-                setFinalUser(setUser, userData);
+                //setToken(json.token);
+                setFinalUser(setUser, userData, json);
                 // If the form is valid, reset the validation state and submit the form
                 setValidated(false);
                 // Clean
