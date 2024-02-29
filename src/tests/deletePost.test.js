@@ -1,4 +1,4 @@
-import { deletePost } from './utils/Utils';
+import { deletePost } from '../utils/Utils';
 import '@testing-library/jest-dom';
 
 
