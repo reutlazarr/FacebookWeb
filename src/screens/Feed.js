@@ -66,7 +66,9 @@ function Feed({ user }) {
     setIsDarkMode(!isDarkMode); // Toggle the dark mode state
   };
 
-  async function del(postId) {
+
+  //server
+  async function deletePostOnServer(postId) {
     const response = await fetch('http://localhost:8080/posts/' + postId, {
         method: "DELETE",
     });
@@ -83,7 +85,7 @@ function Feed({ user }) {
   const deletePost = async (postId) => {
     try {
         // Call the server-side deletion function
-        const response = await del(postId);
+        const response = await deletePostOnServer(postId);
         // If the deletion was successful, update the local state
         if (response.success) {  // Assuming the server sends a success status
             const updatedPosts = postsList.filter((post) => post.id !== postId);
@@ -97,7 +99,8 @@ function Feed({ user }) {
     }
 };
 
-async function update(postId, updatedContent) {
+//server
+async function updatePostOnServer(postId, updatedContent) {
   const response = await fetch('http://localhost:8080/posts/' + postId, {
       method: "PATCH",
       headers: {
@@ -117,7 +120,7 @@ async function update(postId, updatedContent) {
 const updatePost = async (postId, updatedContent, updatedImage) => {
   try {
       // Call the server-side update function
-      const response = await update(postId, updatedContent);
+      const response = await updatePostOnServer(postId, updatedContent);
       // If the update was successful, update the local state
       if (response.success) {  // Assuming the server sends a success status
           const updatedPosts = postsList.map((post) => {
@@ -142,21 +145,49 @@ const updatePost = async (postId, updatedContent, updatedImage) => {
   }
 };
 
+//server
+async function createPostOnServer(content, userName, image) {
+  const response = await fetch('http://localhost:8080/posts', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      author: userName,
+      content: content,
+      image: image, // Assuming the image is handled as a URL or base64 string; adjust if needed
+      published: new Date().toLocaleDateString(), // Assuming this is the 'published' field
+    }),
+  });
 
-const addPost = () => {
-  const post = {
-    id: uuidv4(),
-    content: newPostContent,
-    userName: user.name,
-    postDate: new Date().toLocaleDateString(),
-    postImage: postImage ? URL.createObjectURL(postImage) : null,
-    comments: [],
-    userProfilePicture: user.profilePicture,
-    isNewPost: true,
-  };
-  setPostsList([post, ...postsList]);
-  setNewPostContent("");
-  setPostImage(null); // Reset the selected image after posting
+  if (response.ok) {
+    return await response.json(); // Return the new post object from the server
+  } else {
+    // Handle error response
+    throw new Error('Failed to create the post');
+  }
+}
+
+const createPost = async () => {
+  try {
+    // Call the server to create the post
+    const newPost = await createPostOnServer(newPostContent, user.name, postImage ? URL.createObjectURL(postImage) : null);
+
+    // Assuming the server returns the complete post object including a unique ID
+    const postToAdd = {
+      ...newPost,
+      userName: user.name,
+      userProfilePicture: user.profilePicture,
+      isNewPost: true, // Ensure this property is handled appropriately on the server
+    };
+
+    // Add the new post to the local state
+    setPostsList([postToAdd, ...postsList]);
+    setNewPostContent("");
+    setPostImage(null); // Reset the selected image after posting
+  } catch (error) {
+    console.error('Error creating the post:', error);
+  }
 };
 
 const handleImageChange = (e) => {
@@ -194,7 +225,7 @@ const handleImageChange = (e) => {
               className="image-input"
             />
           </label>
-          <button className="add-post-button" onClick={addPost}>
+          <button className="add-post-button" onClick={createPost}>
             Post
           </button>
           {postsList.map((post) => (
