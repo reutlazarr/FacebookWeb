@@ -97,6 +97,52 @@ function Feed({ user }) {
     }
 };
 
+async function update(postId, updatedContent) {
+  const response = await fetch('http://localhost:8080/posts/' + postId, {
+      method: "PATCH",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: updatedContent })
+  });
+  if (response.ok) {
+      const data = await response.json();
+      return data;
+  } else {
+      // Handle error response
+      throw new Error('Failed to update the post');
+  }
+}
+
+const updatePost = async (postId, updatedContent, updatedImage) => {
+  try {
+      // Call the server-side update function
+      const response = await update(postId, updatedContent);
+      // If the update was successful, update the local state
+      if (response.success) {  // Assuming the server sends a success status
+          const updatedPosts = postsList.map((post) => {
+              if (post.id === postId) {
+                  return {
+                      ...post,
+                      content: updatedContent,
+                      postImage: updatedImage
+                          ? URL.createObjectURL(updatedImage)
+                          : post.postImage,
+                  };
+              }
+              return post;
+          });
+          setPostsList(updatedPosts);
+      } else {
+          // Handle the case where the server reports update failure
+          console.error('Failed to update the post on the server');
+      }
+  } catch (error) {
+      console.error('Error updating the post:', error);
+  }
+};
+
+
 const addPost = () => {
   const post = {
     id: uuidv4(),
@@ -117,21 +163,6 @@ const handleImageChange = (e) => {
   setPostImage(e.target.files[0]);
 };
 
-  const updatePost = (postId, updatedContent, updatedImage) => {
-    const updatedPosts = postsList.map((post) => {
-      if (post.id === postId) {
-        return {
-          ...post,
-          content: updatedContent,
-          postImage: updatedImage
-            ? URL.createObjectURL(updatedImage)
-            : post.postImage,
-        };
-      }
-      return post;
-    });
-    setPostsList(updatedPosts);
-  };
 
   return (
     <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
