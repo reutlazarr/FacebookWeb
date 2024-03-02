@@ -66,32 +66,56 @@ function Feed({ user }) {
     setIsDarkMode(!isDarkMode); // Toggle the dark mode state
   };
 
-  const addPost = () => {
-    const post = {
-      id: uuidv4(),
-      content: newPostContent,
-      userName: user.name,
-      postDate: new Date().toLocaleDateString(),
-      postImage: postImage ? URL.createObjectURL(postImage) : null,
-      comments: [],
-      userProfilePicture: user.profilePicture,
-      isNewPost: true,
-    };
-    setPostsList([post, ...postsList]);
-    setNewPostContent("");
-    setPostImage(null); // Reset the selected image after posting
-  };
+  async function del(postId) {
+    const response = await fetch('http://localhost:8080/posts/' + postId, {
+        method: "DELETE",
+    });
+    // Check if the deletion was successful
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    } else {
+        // Handle error response
+        throw new Error('Failed to delete the post');
+    }
+}
 
-  const handleImageChange = (e) => {
-    setPostImage(e.target.files[0]);
-  };
+  const deletePost = async (postId) => {
+    try {
+        // Call the server-side deletion function
+        const response = await del(postId);
+        // If the deletion was successful, update the local state
+        if (response.success) {  // Assuming the server sends a success status
+            const updatedPosts = postsList.filter((post) => post.id !== postId);
+            setPostsList(updatedPosts);
+        } else {
+            // Handle the case where the server reports deletion failure
+            console.error('Failed to delete the post on the server');
+        }
+    } catch (error) {
+        console.error('Error deleting the post:', error);
+    }
+};
 
-  const deletePost = (postId) => {
-    // Filter out the post with the matching postId
-    const updatedPosts = postsList.filter((post) => post.id !== postId);
-    // Update the post list without the deleted post
-    setPostsList(updatedPosts);
+const addPost = () => {
+  const post = {
+    id: uuidv4(),
+    content: newPostContent,
+    userName: user.name,
+    postDate: new Date().toLocaleDateString(),
+    postImage: postImage ? URL.createObjectURL(postImage) : null,
+    comments: [],
+    userProfilePicture: user.profilePicture,
+    isNewPost: true,
   };
+  setPostsList([post, ...postsList]);
+  setNewPostContent("");
+  setPostImage(null); // Reset the selected image after posting
+};
+
+const handleImageChange = (e) => {
+  setPostImage(e.target.files[0]);
+};
 
   const updatePost = (postId, updatedContent, updatedImage) => {
     const updatedPosts = postsList.map((post) => {
