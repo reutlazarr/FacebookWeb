@@ -10,7 +10,7 @@ function Post({
   postDate,
   userProfilePicture,
   postImage,
-  user,
+  profile,
   isNewPost,
   onUpdate,
 }) {
@@ -28,16 +28,16 @@ function Post({
   };
 
   const addComment = () => {
-    if (!user) {
+    if (!profile) {
       alert("You must be logged in to post comments.");
       return;
     }
     const newComment = {
       id: new Date().getTime().toString(),
-      userName: user.name,
+      userName: profile.name,
       commentDate: new Date().toLocaleDateString(),
       content: commentText,
-      userProfilePicture: user.image,
+      userProfilePicture: profile.profilePicture,
     };
     setComments([newComment, ...comments]);
     setCommentText(""); // Reset the input field after adding the comment
@@ -86,7 +86,7 @@ function Post({
         <div className="author-info">
           <img
             className="profile-picture"
-            src={isNewPost ? user.image : userProfilePicture}
+            src={isNewPost ? profile.profilePicture : userProfilePicture}
             alt="Profile"
           />
           <div className="author-details">
