@@ -75,6 +75,7 @@ function Registration() {
     };
 
     const validateEmailExists = () => {
+      // Validte email is new and uniq
       errors.emailError = "Email already exists. Please use a different email.";
       isValid = false;
     }
@@ -139,10 +140,7 @@ function Registration() {
         //     },
         //     body: JSON.stringify(userData),
         // });
-        if (response.status === 409) {
-          validateEmailExists();
-          throw new Error('Email already exists');
-        }
+        
         // if (!response.ok) { 
         //   if (response.status === 409) {
         //     validateEmailExists();
@@ -151,8 +149,11 @@ function Registration() {
         //     throw new Error('Failed to register');
         //   }
         // }
+        if (response.status === 409) {
+          validateEmailExists();
+          throw new Error('Email already exists');
+        }
 
-        
         // response is ok and the user registered
         const data = await response.json();
         console.log(data); // Process the response data

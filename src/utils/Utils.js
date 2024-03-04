@@ -48,5 +48,17 @@ export const handleRegistration = async (userData) => {
   return response;
 };
 
-
+export const login = async (userData) => {
+  const response = await fetch('http://localhost:8080/api/tokens', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+    if (!response.ok && !response.status === 409) { 
+      throw new Error('Failed to log in');
+    }
+  return response;
+};
   

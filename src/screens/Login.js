@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
-import { getUser, validateUserData, validateUserEmail } from '../utils/Utils';
+import { getUser, login, validateUserData, validateUserEmail } from '../utils/Utils';
 
 const Login = ({ setUser }) => {
     const navigate = useNavigate();
@@ -41,6 +41,12 @@ const Login = ({ setUser }) => {
             }
         };
 
+        const validateEmailExists = () => {
+            // Validte email exists
+            errors.emailError = "Email not found";
+            isValid = false;
+        }
+
         // Validate form fields
         let isValid = true;
         const errors = {};
@@ -61,20 +67,26 @@ const Login = ({ setUser }) => {
             };
 
             try {
-                const response = await fetch('http://localhost:8080/api/tokens', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(userData),
-                });
-                if (!response.ok) {
-                    if (response.status === 409) {
-                        errors.emailError = "Email not found";
-                        throw new Error('Email not found');
-                    }
-                    throw new Error('Failed to log in');
+                const response = await login(userData);
+                // const response = await fetch('http://localhost:8080/api/tokens', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify(userData),
+                // });
+                // if (!response.ok) {
+                //     if (response.status === 409) {
+                //         errors.emailError = "Email not found";
+                //         throw new Error('Email not found');
+                //     }
+                //     throw new Error('Failed to log in');
+                // }
+                if (response.status === 409) {
+                    validateEmailExists();
+                    throw new Error('Email not found');
                 }
+
                 const json = await response.json();
     
                 console.log("login " + json.token); // Process the response data, e.g., save the token
