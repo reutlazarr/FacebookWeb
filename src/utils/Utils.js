@@ -48,6 +48,7 @@ export const handleRegistration = async (userData) => {
   return response;
 };
 
+// call the server, try to login with the userData
 export const login = async (userData) => {
   const response = await fetch('http://localhost:8080/api/tokens', {
         method: 'POST',
