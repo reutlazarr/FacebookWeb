@@ -74,6 +74,11 @@ function Registration() {
       }
     };
 
+    const validateEmailExists = () => {
+      errors.emailError = "Email already exists. Please use a different email.";
+      isValid = false;
+    }
+
     const validatePassword = () => {
       // Validte password with at least 8 characters long
       if (formData.password.length < 8) {
@@ -140,7 +145,7 @@ function Registration() {
         });
         if (!response.ok) { 
           if (response.status === 409) {
-            errors.emailError = "Email already exists. Please use a different email.";
+            validateEmailExists();
             throw new Error('Email already exists');
           } else {
             throw new Error('Failed to register');
@@ -162,15 +167,15 @@ function Registration() {
         });
         // Navigate back to the login page
         navigate("/");
-        } catch (error) {
-            console.error(error);
-            isValid = false;
-             // Set formData with the data and matching erors
-            setFormData((prevData) => ({
-              ...prevData,
-              ...errors,
-            }));
-        }
+      } catch (error) {
+          console.error(error);
+          isValid = false;
+            // Set formData with the data and matching erors
+          setFormData((prevData) => ({
+            ...prevData,
+            ...errors,
+          }));
+      }
     } 
     // If the form is invalid, display validation feedback
     setValidated(true);
