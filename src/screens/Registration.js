@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Registration.css";
-import { saveUserData } from "../utils/Utils";
+import { handleRegistration } from "../utils/Utils";
 
 function Registration() {
   const navigate = useNavigate();
@@ -122,35 +122,38 @@ function Registration() {
       ...errors,
     }));
 
-    if (isValid) {
-      
+    if (isValid) {      
       // Save user information
       const userData = {
-        // firstName: formData.firstName,
-        // lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
         userName: formData.firstName + " " + formData.lastName,
         userProfile: formData.selectedImage,
       };
-      //saveUserData(userData);
-      
       try {
-        const response = await fetch('http://localhost:8080/api/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        });
-        if (!response.ok) { 
-          if (response.status === 409) {
-            validateEmailExists();
-            throw new Error('Email already exists');
-          } else {
-            throw new Error('Failed to register');
-          }
+        const response = await handleRegistration(userData);
+        // const response = await fetch('http://localhost:8080/api/users', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(userData),
+        // });
+        if (response.status === 409) {
+          validateEmailExists();
+          throw new Error('Email already exists');
         }
+        // if (!response.ok) { 
+        //   if (response.status === 409) {
+        //     validateEmailExists();
+        //     throw new Error('Email already exists');
+        //   } else {
+        //     throw new Error('Failed to register');
+        //   }
+        // }
+
+        
+        // response is ok and the user registered
         const data = await response.json();
         console.log(data); // Process the response data
         // If the form is valid, reset the validation state and submit the form
