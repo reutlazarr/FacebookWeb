@@ -9,7 +9,6 @@ import TopBar from "../feed_components/TopBar";
 import { useNavigate } from "react-router-dom";
 import { addPost, deletePost, updatePost } from "../feed_components/HandlePosts";
 
-
 function Feed({ user }) {
   const navigate = useNavigate();
   const [postsList, setPostsList] = useState([]);

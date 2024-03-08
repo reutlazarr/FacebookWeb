@@ -7,7 +7,7 @@ export async function addPost(user, newPostContent, postImage, setPostsList) {
         if (postImage) {
             formData.append('image', postImage);
         }
-        const response = await fetch('http://localhost:8080/api/posts/', {
+        const response = await fetch(`http://localhost:8080/api/users/${user.email}/posts/`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${user.token}`,
@@ -20,7 +20,9 @@ export async function addPost(user, newPostContent, postImage, setPostsList) {
         }
 
         const newPost = await response.json();
+        console.log(newPost);
         setPostsList(postsList => [newPost, ...postsList]);
+        
     } catch (error) {
         console.error("Error adding post:", error);
     }
@@ -28,17 +30,21 @@ export async function addPost(user, newPostContent, postImage, setPostsList) {
 
 export async function deletePost(user, postId, setPostsList) {
     try {
-        const response = await fetch(`http://localhost:8080/api/posts/${postId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${user.email}/posts/${postId}/`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${user.token}`,
             },
         });
         if (!response.ok) {
+            console.log('shit!!!!!')
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
+        console.log('wow ')
         setPostsList(postsList => postsList.filter(post => post.id !== postId));
+        console.log('wow wow ')
     } catch (error) {
+        console.log(postId)
         console.error("Error deleting post:", error);
     }
 }

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { addPost, deletePost, updatePost } from "../feed_components/HandlePosts";
 import TopBar from "../feed_components/TopBar";
 import Post from "../feed_components/Post";
-
+import Menu from "../feed_components/Menu";
 
 function Profile({ user }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -48,6 +48,7 @@ function Profile({ user }) {
         isDarkMode={isDarkMode}
       />
       <div className="main-content">
+        <Menu></Menu>
         <div className="post-containers">
           <input
             value={newPostContent}
@@ -76,8 +77,8 @@ function Profile({ user }) {
             <Post
               key={post.id}
               {...post}
-              // profile={profile}
-              onDelete={() => deletePostHandler(post.id)}
+               //profile={profile}
+              onDelete={() => deletePostHandler(post._id)}
               onUpdate={updatePostHandler}
             />
           ))}
