@@ -48,7 +48,7 @@ function Profile({ user }) {
       const response = await fetch(`http://localhost:8080/api/users/${user.email}/posts/`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${user.token}`,  // Assuming 'user' is your authenticated user with a token
+          'Authorization': `Bearer ${user.token}`,  
         },
       });
 
@@ -57,7 +57,7 @@ function Profile({ user }) {
       }
 
       const posts = await response.json();
-      setPostsList(posts); // Assuming you have a state setter for postsList in your component
+      setPostsList(posts); 
     } catch (error) {
       console.error("Error fetching user posts:", error);
     }
