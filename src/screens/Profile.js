@@ -18,6 +18,9 @@ function Profile({ user }) {
     console.log(user)
     if (!user.token) {
       navigate("/");
+    } else {
+      // Fetch user's posts when the user is present and has a token
+      getUserPosts(user._id);
     }
   }, [user, navigate]);
 
@@ -28,8 +31,8 @@ function Profile({ user }) {
   //handeling posts
   const addPostHandler = async () => {
     await addPost(user, newPostContent, postImage, setPostsList);
-    setNewPostContent("");
-    setPostImage(null);
+    setNewPostContent(newPostContent);
+    setPostImage(postImage);
   };
 
   const deletePostHandler = async (postId) => {
@@ -38,6 +41,26 @@ function Profile({ user }) {
 
   const updatePostHandler = async (postId, updatedContent, updatedImage) => {
     await updatePost(user, postId, updatedContent, updatedImage, postsList, setPostsList);
+  };
+
+  const getUserPosts = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/users/${user.email}/posts/`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${user.token}`,  // Assuming 'user' is your authenticated user with a token
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const posts = await response.json();
+      setPostsList(posts); // Assuming you have a state setter for postsList in your component
+    } catch (error) {
+      console.error("Error fetching user posts:", error);
+    }
   };
 
   return (
@@ -75,9 +98,8 @@ function Profile({ user }) {
           </button>
           {postsList.map((post) => (
             <Post
-              key={post.id}
+              key={post._id}
               {...post}
-               //profile={profile}
               onDelete={() => deletePostHandler(post._id)}
               onUpdate={updatePostHandler}
             />
