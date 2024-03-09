@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Feed from "./screens/Feed";
 import { useState } from "react";
 import Profile from "./screens/Profile";
+import UserProfile from "./screens/UserProfile";
 
 function App() {
   // const [token, setToken] = useState(null);
@@ -20,6 +21,7 @@ function App() {
           />
           <Route path="/signIn" element={<Feed user={user} />} />
           <Route path="/Profile" element={<Profile user={user} />} />
+          <Route path="/UserProfile" element={<UserProfile user={user} />} />
           <Route path="/test" element={<div><h1>test</h1></div>} />
         </Routes>
       </BrowserRouter>

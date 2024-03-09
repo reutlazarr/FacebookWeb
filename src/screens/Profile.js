@@ -11,7 +11,7 @@ function Profile({ user }) {
   const [postsList, setPostsList] = useState([]);
   const [newPostContent, setNewPostContent] = useState("");
   const [postImage, setPostImage] = useState(null);
-  // const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState(null);
 
   // This ensures the feed will display only if the user signIn and have a token
   useEffect(() => {
@@ -24,15 +24,52 @@ function Profile({ user }) {
     }
   }, [user, navigate]);
 
+
+  function setProfileUser(setProfile, data) {
+    setProfile({
+      name: data.name,
+      profilePicture: data.profilePicture
+    });
+  }
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!user.token) return; // If no token is provided, do not attempt to fetch user
+      try {
+        const response = await fetch(`http://localhost:8080/api/users/${user.email}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${user.token}` // Include the token in the request
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setProfileUser(setProfile, data);
+
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+    fetchUser();
+  }, [user.token, user.email]); // Dependency on token to refetch if it changes
+
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode); // Toggle the dark mode state
+  };
+
+  const handleImageChange = (e) => {
+    setPostImage(e.target.files[0]);
   };
 
   //handeling posts
   const addPostHandler = async () => {
     await addPost(user, newPostContent, postImage, setPostsList);
-    setNewPostContent(newPostContent);
-    setPostImage(postImage);
+    setNewPostContent('');
+    setPostImage(null);
   };
 
   const deletePostHandler = async (postId) => {
@@ -48,7 +85,7 @@ function Profile({ user }) {
       const response = await fetch(`http://localhost:8080/api/users/${user.email}/posts/`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${user.token}`,  
+          'Authorization': `Bearer ${user.token}`,
         },
       });
 
@@ -57,7 +94,7 @@ function Profile({ user }) {
       }
 
       const posts = await response.json();
-      setPostsList(posts); 
+      setPostsList(posts);
     } catch (error) {
       console.error("Error fetching user posts:", error);
     }
@@ -89,7 +126,7 @@ function Profile({ user }) {
               id="file-upload"
               type="file"
               accept="image/*"
-              // onChange={handleImageChange}
+              //onChange={handleImageChange}
               className="image-input"
             />
           </label>
@@ -100,6 +137,7 @@ function Profile({ user }) {
             <Post
               key={post._id}
               {...post}
+              author={post.author}
               onDelete={() => deletePostHandler(post._id)}
               onUpdate={updatePostHandler}
             />
@@ -109,5 +147,6 @@ function Profile({ user }) {
     </div>
   );
 };
+
 
 export default Profile;      

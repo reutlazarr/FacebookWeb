@@ -15,19 +15,15 @@ function TopBar({ user, onToggleDarkMode, isDarkMode }) {
     });
   }
 
-
   const handleLogout = () => {
-    // Perform logout logic here (e.g., clearing local storage, resetting user state)
     navigate("/"); // Redirect to login page
   };
 
   const profilePage = () => {
-    // navigate("/Profile", { state: { user } });
     navigate("/Profile");
   };
 
   const feedTaker = () => {
-    // navigate("/Profile", { state: { user } });
     navigate("/SignIn");
   };
 
@@ -35,9 +31,6 @@ function TopBar({ user, onToggleDarkMode, isDarkMode }) {
     const fetchUser = async () => {
       if (!user.token) return; // If no token is provided, do not attempt to fetch user
       try {
-        console.log("Fetching user profile...");
-        console.log(user.token);
-        console.log(user.email);
         const response = await fetch(`http://localhost:8080/api/users/${user.email}`, {
           method: 'GET',
           headers: {
@@ -50,12 +43,8 @@ function TopBar({ user, onToggleDarkMode, isDarkMode }) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data)
         setProfileUser(setProfile, data);
-        //setProfile(data); // Assuming the response contains an object with the user key
-        console.log("profile");
-        //console.log({profile});
-        //console.log(profile.name);
+
       } catch (error) {
         console.error("Error fetching user:", error);
       }
