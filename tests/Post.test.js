@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Post from './feed_components/Post'; // Adjust the import path as necessary
+import Post from '../src/feed_components/Post'; // Adjust the import path as necessary
 
 describe('Post Component', () => {
     it('allows the Like button to be clicked', () => {

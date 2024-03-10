@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Login from './screens/Login'; // Adjust the import path as necessary
-import * as Utils from './utils/Utils';
+import Login from '../src/screens/Login'; // Adjust the import path as necessary
+import * as Utils from '../src/utils/Utils';
 
 // Mock navigate function
 jest.mock('react-router-dom', () => ({
