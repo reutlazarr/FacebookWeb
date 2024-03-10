@@ -7,114 +7,112 @@ import initialPosts from "../data/db.json";
 import Menu from "../feed_components/Menu";
 import TopBar from "../feed_components/TopBar";
 import { useNavigate } from "react-router-dom";
-import { addPost, deletePost, updatePost } from "../feed_components/HandlePosts";
 
 function Feed({ user }) {
   const navigate = useNavigate();
-  const [postsList, setPostsList] = useState([]);
+  const [postsList, setPostsList] = useState(initialPosts);
   const [newPostContent, setNewPostContent] = useState("");
   const [postImage, setPostImage] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [profile, setProfile] = useState(null);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode); // Toggle the dark mode state
-  };
+  function setProfileUser(setProfile, data) {
+    setProfile({
+      name: data.name,
+      profilePicture: data.profilePicture
+    });
+  }
 
   // This ensures the feed will display only if the user signIn and have a token
   useEffect(() => {
     if (!user.token) {
       navigate("/");
-    } else {
-      // Fetch user's posts when the user is present and has a token
-      getFeedPosts(user.email);
     }
   }, [user, navigate]);
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!user.token) return; // If no token is provided, do not attempt to fetch user
+      try {
+        console.log("Fetching user profile...");
+        console.log(user.token);
+        console.log(user.email);
+        const response = await fetch(`http://localhost:8080/api/users/${user.email}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${user.token}` // Include the token in the request
+          },
+        });
 
-  //handeling posts
-  const addPostHandler = async () => {
-    await addPost(user, newPostContent, postImage, setPostsList);
-    setNewPostContent("");
-    setPostImage(null);
-  };
-
-  const deletePostHandler = async (postId) => {
-    await deletePost(user, postId, setPostsList);
-  };
-
-  const updatePostHandler = async (postId, updatedContent, updatedImage) => {
-    await updatePost(user, postId, updatedContent, updatedImage, postsList, setPostsList);
-  };
-
-
-  const getFeedPosts = async (userId) => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/posts/`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${user.token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data)
+        setProfileUser(setProfile, data);
+        //setProfile(data); // Assuming the response contains an object with the user key
+        console.log("profile");
+        console.log({profile});
+        console.log(profile.name);
+      } catch (error) {
+        console.error("Error fetching user:", error);
       }
+    };
+    fetchUser();
+  }, [user.token, user.email]); // Dependency on token to refetch if it changes
 
-      const posts = await response.json();
-      setPostsList(posts);
-    } catch (error) {
-      console.error("Error fetching user posts:", error);
-    }
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode); // Toggle the dark mode state
   };
 
-  // const addPost = () => {
-  //   const post = {
-  //     id: uuidv4(),
-  //     content: newPostContent,
-  //     userName: profile.name,
-  //     postDate: new Date().toLocaleDateString(),
-  //     postImage: postImage ? URL.createObjectURL(postImage) : null,
-  //     comments: [],
-  //     userProfilePicture: profile.profilePicture,
-  //     isNewPost: true,
-  //   };
-  //   setPostsList([post, ...postsList]);
-  //   setNewPostContent("");
-  //   setPostImage(null); // Reset the selected image after posting
-  // };
+  const addPost = () => {
+    const post = {
+      id: uuidv4(),
+      content: newPostContent,
+      userName: user.name,
+      postDate: new Date().toLocaleDateString(),
+      postImage: postImage ? URL.createObjectURL(postImage) : null,
+      comments: [],
+      userProfilePicture: user.profilePicture,
+      isNewPost: true,
+    };
+    setPostsList([post, ...postsList]);
+    setNewPostContent("");
+    setPostImage(null); // Reset the selected image after posting
+  };
 
   const handleImageChange = (e) => {
     setPostImage(e.target.files[0]);
   };
 
-  // const deletePost = (postId) => {
-  //   // Filter out the post with the matching postId
-  //   const updatedPosts = postsList.filter((post) => post.id !== postId);
-  //   // Update the post list without the deleted post
-  //   setPostsList(updatedPosts);
-  // };
+  const deletePost = (postId) => {
+    // Filter out the post with the matching postId
+    const updatedPosts = postsList.filter((post) => post.id !== postId);
+    // Update the post list without the deleted post
+    setPostsList(updatedPosts);
+  };
 
-  // const updatePost = (postId, updatedContent, updatedImage) => {
-  //   const updatedPosts = postsList.map((post) => {
-  //     if (post.id === postId) {
-  //       return {
-  //         ...post,
-  //         content: updatedContent,
-  //         postImage: updatedImage
-  //           ? URL.createObjectURL(updatedImage)
-  //           : post.postImage,
-  //       };
-  //     }
-  //     return post;
-  //   });
-  //   setPostsList(updatedPosts);
-  // };
+  const updatePost = (postId, updatedContent, updatedImage) => {
+    const updatedPosts = postsList.map((post) => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          content: updatedContent,
+          postImage: updatedImage
+            ? URL.createObjectURL(updatedImage)
+            : post.postImage,
+        };
+      }
+      return post;
+    });
+    setPostsList(updatedPosts);
+  };
 
   return (
     <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
       <TopBar
-        // profile={profile}
-        user={user}
+        profile={profile}
         onToggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
       />
@@ -141,18 +139,18 @@ function Feed({ user }) {
               className="image-input"
             />
           </label>
-          <button className="add-post-button" onClick={addPostHandler}>
+          <button className="add-post-button" onClick={addPost}>
             Post
           </button>
-          {postsList.map(post => (
+          {postsList.map((post) => (
             <Post
-              key={post._id}
+              key={post.id}
               {...post}
-              author={post.author}
-              onDelete={() => deletePostHandler(post._id)}
-              onUpdate={updatePostHandler}
-              />
-              ))}
+              user={user}
+              onDelete={() => deletePost(post.id)}
+              onUpdate={updatePost}
+            />
+          ))}
         </div>
       </div>
     </div>

@@ -1,56 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TopBar.css";
 
-function TopBar({ user, onToggleDarkMode, isDarkMode }) {
+function TopBar({ profile, onToggleDarkMode, isDarkMode }) {
   const [showDropdown, setShowDropdown] = useState(false);
   //const [user, setUser] = useState(null);
   const navigate = useNavigate(); // Hook for navigation
-  const [profile, setProfile] = useState(null);
-
-  function setProfileUser(setProfile, data) {
-    setProfile({
-      name: data.name,
-      profilePicture: data.profilePicture
-    });
-  }
 
   const handleLogout = () => {
+    // Perform logout logic here (e.g., clearing local storage, resetting user state)
     navigate("/"); // Redirect to login page
   };
-
-  const profilePage = () => {
-    navigate("/Profile");
-  };
-
-  const feedTaker = () => {
-    navigate("/SignIn");
-  };
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!user.token) return; // If no token is provided, do not attempt to fetch user
-      try {
-        const response = await fetch(`http://localhost:8080/api/users/${user.email}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `bearer ${user.token}` // Include the token in the request
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setProfileUser(setProfile, data);
-
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-    fetchUser();
-  }, [user.token, user.email]); // Dependency on token to refetch if it changes
 
   return (
     <div className={`top-bar ${isDarkMode ? "dark-mode-topbar" : ""}`}>
@@ -62,7 +22,7 @@ function TopBar({ user, onToggleDarkMode, isDarkMode }) {
           placeholder="Search Facebook"
           className="search-bar"
         />
-        <a href="#" className="menu-item" title="Home" onClick={feedTaker}>
+        <a href="#" className="menu-item" title="Home">
           <i className="bi bi-house-door-fill"></i>
         </a>
         <a href="#" className="menu-item" title="Marketplace">
@@ -103,22 +63,22 @@ function TopBar({ user, onToggleDarkMode, isDarkMode }) {
             </button>
             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
               <li>
-                <button className="dropdown-item" onClick={profilePage}>
-                  Profile
+                <button className="dropdown-item" onClick={handleLogout}>
+                  Settings & privacy
                 </button>
               </li>
               <li>
-                <button className="dropdown-item">
-                Settings & privacy
+                <button className="dropdown-item" onClick={handleLogout}>
+                  Help & support
                 </button>
               </li>
               <li>
-                <button className="dropdown-item">
-                Help & support
+                <button className="dropdown-item" onClick={handleLogout}>
+                  Display & accessibility
                 </button>
               </li>
               <li>
-                <button className="dropdown-item">
+                <button className="dropdown-item" onClick={handleLogout}>
                   Give feedback
                 </button>
               </li>

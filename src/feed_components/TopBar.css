@@ -114,6 +114,8 @@
   cursor: pointer; /* Maintain cursor pointer from previous styles */
 }
 
+
+
   .dropdown-menu {
     position: absolute;
     right: 0;
