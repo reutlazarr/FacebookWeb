@@ -24,8 +24,8 @@ function Post({
   const [showShareOptions, setShowShareOptions] = useState(false);
   const navigate = useNavigate(); // Initialize navigate
 
-  const fetchUserPosts = (email) => {
-    navigate("/UserProfile", { state: { email: email } });
+  const fetchUserPosts = (author) => {
+    navigate("/UserProfile", { state: { author: author } });
   };
 
   const toggleCommentInput = () => {
@@ -95,7 +95,7 @@ function Post({
             className="profile-picture"
             src={author.profilePicture}
             alt="Profile"
-            onClick={() => fetchUserPosts(author.email)}
+            onClick={() => fetchUserPosts(author)}
           />
           <div className="author-details">
             <span className="post-author">{author.name}</span>
