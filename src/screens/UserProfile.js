@@ -165,7 +165,7 @@ function UserProfile({ user }) {
                     <div className="user-profile">
                     <img src={author.profilePicture} alt="Profile" className="profile-picture" />
                     <h3>{author.name}</h3>
-                    <button onClick={sendFriendRequest} className="add-friend-button">Add Friend</button>
+                    <button onClick={sendFriendRequest} className="add-friend-button">Add Friend! </button>
                     </div>
                     {postsList.map((post) => (
                         <Post
