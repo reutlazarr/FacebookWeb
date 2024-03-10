@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
-import { getUser, login, validateUserData, validateUserEmail } from '../utils/Utils';
+import { login } from '../utils/Utils';
 
 const Login = ({ setUser }) => {
     const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Login = ({ setUser }) => {
 
     // handle user input changes
     const handleChange = (e) => {
-        const { name, value, checked } = e.target; // Get the event targt
+        const { name, value } = e.target; // Get the event targt
         setFormData((prevData) => ({
         ...prevData,
         [name]: value, // Update the names in prevData with thier new value
