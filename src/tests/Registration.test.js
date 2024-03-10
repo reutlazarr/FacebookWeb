@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
-import Registration from './screens/Registration';
+import Registration from '../screens/Registration';
 
 // Mock saveUserData function
 jest.mock('./utils/Utils', () => ({
