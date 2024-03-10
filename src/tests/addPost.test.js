@@ -1,4 +1,4 @@
-import { addPost } from './utils/Utils';
+import { addPost } from '../utils/Utils';
 import '@testing-library/jest-dom';
 
 

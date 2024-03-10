@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Registration.css";
-import { saveUserData } from "../utils/Utils";
+import { handleRegistration } from "../utils/Utils";
 
-function Registration({ setUser }) {
+function Registration() {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
@@ -21,13 +21,6 @@ function Registration({ setUser }) {
     confirmPasswordError: "",
     agreeTermsError: "",
   });
-
-  function setFinalUser(setUser, formData) {
-    setUser({
-      name: formData.firstName + " " + formData.lastName,
-      image: formData.selectedImage,
-    });
-  }
 
   // handle user input changes
   const handleChange = (e) => {
@@ -62,7 +55,7 @@ function Registration({ setUser }) {
   };
 
   // handle form submit
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission
 
     // Validate form fields not empty
@@ -80,6 +73,12 @@ function Registration({ setUser }) {
         isValid = false;
       }
     };
+
+    const validateEmailExists = () => {
+      // Validte email is new and uniq
+      errors.emailError = "Email already exists. Please use a different email.";
+      isValid = false;
+    }
 
     const validatePassword = () => {
       // Validte password with at least 8 characters long
@@ -124,34 +123,66 @@ function Registration({ setUser }) {
       ...errors,
     }));
 
-    if (isValid) {
-      // If the form is valid, reset the validation state and submit the form
-      setValidated(false);
+    if (isValid) {      
       // Save user information
       const userData = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
-        selectedImage: formData.selectedImage,
+        userName: formData.firstName + " " + formData.lastName,
+        userProfile: formData.selectedImage,
       };
-      saveUserData(userData);
-      // Clean
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        agreeTerms: false,
-        selectedImage: null,
-      });
-      // Navigate back to the login page
-      navigate("/");
-    } else {
-      // If the form is invalid, display validation feedback
-      setValidated(true);
-    }
+      try {
+        const response = await handleRegistration(userData);
+        // const response = await fetch('http://localhost:8080/api/users', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(userData),
+        // });
+        
+        // if (!response.ok) { 
+        //   if (response.status === 409) {
+        //     validateEmailExists();
+        //     throw new Error('Email already exists');
+        //   } else {
+        //     throw new Error('Failed to register');
+        //   }
+        // }
+        if (response.status === 409) {
+          validateEmailExists();
+          throw new Error('Email already exists');
+        }
+
+        // response is ok and the user registered
+        const data = await response.json();
+        console.log(data); // Process the response data
+        // If the form is valid, reset the validation state and submit the form
+        setValidated(false);
+        // Clean
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          agreeTerms: false,
+          selectedImage: null,
+        });
+        // Navigate back to the login page
+        navigate("/");
+      } catch (error) {
+          console.error(error);
+          isValid = false;
+            // Set formData with the data and matching erors
+          setFormData((prevData) => ({
+            ...prevData,
+            ...errors,
+          }));
+      }
+    } 
+    // If the form is invalid, display validation feedback
+    setValidated(true);
   };
 
   return (
@@ -161,9 +192,7 @@ function Registration({ setUser }) {
         <div className="card shadow p-4 mb-4 registration-card">
           <div className="card-header">
             <Link
-              to="/"
-              className="btn btn-lg btn-close"
-              aria-label="Close"
+              to="/" className="btn btn-lg btn-close" aria-label="Close"
             ></Link>
             <h2 className="text-center fw-bold">Sign Up</h2>
           </div>
@@ -171,14 +200,10 @@ function Registration({ setUser }) {
           <form noValidate validated={validated} onSubmit={handleSubmit}>
             <div className="row g-3">
               <div className="px-3 col-md-6">
-                <label htmlFor="validationCustom01" className="form-label">
-                  First name
-                </label>
+                <label htmlFor="validationCustom01" className="form-label">First name</label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    validated && formData.firstNameError ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${validated && formData.firstNameError ? "is-invalid" : ""}`}
                   id="validationCustom01"
                   name="firstName"
                   placeholder="First name"
@@ -187,19 +212,13 @@ function Registration({ setUser }) {
                   required
                   autoComplete="First name"
                 />
-                <div className="invalid-feedback">
-                  {formData.firstNameError}
-                </div>
+                <div className="invalid-feedback">{formData.firstNameError}</div>
               </div>
               <div className="px-3 col-md-6">
-                <label htmlFor="validationCustom02" className="form-label">
-                  Last name
-                </label>
+                <label htmlFor="validationCustom02" className="form-label">Last name</label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    validated && formData.lastNameError ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${validated && formData.lastNameError ? "is-invalid" : ""}`}
                   id="validationCustom02"
                   name="lastName"
                   placeholder="Last name"
@@ -213,14 +232,10 @@ function Registration({ setUser }) {
             </div>
             <div className="row g-3">
               <div className="px-3 col-md-12">
-                <label htmlFor="validationCustom03" className="form-label">
-                  Email address
-                </label>
+                <label htmlFor="validationCustom03" className="form-label">Email address</label>
                 <input
                   type="email"
-                  className={`form-control ${
-                    validated && formData.emailError ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${validated && formData.emailError ? "is-invalid" : ""}`}
                   id="validationCustom03"
                   name="email"
                   placeholder="Email address"
@@ -234,14 +249,10 @@ function Registration({ setUser }) {
             </div>
             <div className="row g-3">
               <div className="px-3 col-md-12">
-                <label htmlFor="validationCustom04" className="form-label">
-                  Password
-                </label>
+                <label htmlFor="validationCustom04" className="form-label">Password</label>
                 <input
                   type="password"
-                  className={`form-control ${
-                    validated && formData.passwordError ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${validated && formData.passwordError ? "is-invalid" : ""}`}
                   id="validationCustom04"
                   name="password"
                   placeholder="Password"
@@ -255,16 +266,10 @@ function Registration({ setUser }) {
             </div>
             <div className="row g-3">
               <div className="px-3 col-md-12">
-                <label htmlFor="validationCustom05" className="form-label">
-                  Confirm password
-                </label>
+                <label htmlFor="validationCustom05" className="form-label"></label>
                 <input
                   type="password"
-                  className={`form-control ${
-                    validated && formData.confirmPasswordError
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control ${validated && formData.confirmPasswordError ? "is-invalid" : ""}`}
                   id="validationCustom05"
                   name="confirmPassword"
                   placeholder="Confirm password"
@@ -273,9 +278,7 @@ function Registration({ setUser }) {
                   required
                   autoComplete="Confirm password"
                 />
-                <div className="invalid-feedback">
-                  {formData.confirmPasswordError}
-                </div>
+                <div className="invalid-feedback"> {formData.confirmPasswordError}</div>
               </div>
             </div>
             <div className="row g-3">
@@ -284,9 +287,7 @@ function Registration({ setUser }) {
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
-                  className={`custom-file-input ${
-                    validated && !formData.selectedImage ? "is-invalid" : ""
-                  }`}
+                  className={`custom-file-input ${validated && !formData.selectedImage ? "is-invalid" : ""}`}
                   required
                 />
                 {formData.selectedImage && (
@@ -300,18 +301,14 @@ function Registration({ setUser }) {
                   </div>
                 )}
                 {validated && !formData.selectedImage && (
-                  <span className="custom-file-input-error">
-                    No file chosen
-                  </span>
+                  <span className="custom-file-input-error">No file chosen</span>
                 )}
               </div>
             </div>
             <div className="px-2 col-12">
               <div className="form-check">
                 <input
-                  className={`form-check-input ${
-                    validated && formData.agreeTermsError ? "is-invalid" : ""
-                  }`}
+                  className={`form-check-input ${validated && formData.agreeTermsError ? "is-invalid" : ""}`}
                   type="checkbox"
                   id="invalidCheck"
                   name="agreeTerms"
@@ -319,23 +316,13 @@ function Registration({ setUser }) {
                   onChange={handleChange}
                   required
                 />
-                <label className="form-check-label" htmlFor="invalidCheck">
-                  Agree to terms and conditions
-                </label>
-                <div className="invalid-feedback">
-                  {formData.agreeTermsError}
-                </div>
+                <label className="form-check-label" htmlFor="invalidCheck">Agree to terms and conditions</label>
+                <div className="invalid-feedback">{formData.agreeTermsError}</div>
               </div>
             </div>
             <div className="col-12">
               <div className="text-center">
-                <button
-                  className="btn btn-success"
-                  type="submit"
-                  onClick={() => setFinalUser(setUser, formData)}
-                >
-                  Sign Up
-                </button>
+                <button className="btn btn-success" type="submit">Sign Up</button>
               </div>
             </div>
           </form>

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TopBar.css";
 
-function TopBar({ user, onToggleDarkMode, isDarkMode }) {
+function TopBar({ profile, onToggleDarkMode, isDarkMode }) {
   const [showDropdown, setShowDropdown] = useState(false);
+  //const [user, setUser] = useState(null);
   const navigate = useNavigate(); // Hook for navigation
-
 
   const handleLogout = () => {
     // Perform logout logic here (e.g., clearing local storage, resetting user state)
@@ -45,7 +45,7 @@ function TopBar({ user, onToggleDarkMode, isDarkMode }) {
         <a href="#" className="left-menu-item" title="Notifications">
           <i className="bi bi-bell-fill"></i>
         </a>
-        {user && (
+        {profile && (
           <div className="dropdown">
             <button
               className="btn btn-secondary dropdown-toggle"
@@ -55,11 +55,11 @@ function TopBar({ user, onToggleDarkMode, isDarkMode }) {
               aria-expanded="false"
             >
               <img
-                src={user.image}
+                src={profile.profilePicture}
                 alt="profile"
                 className="top-bar-profile-picture"
               />
-              {user.name}
+              {profile.name}
             </button>
             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
               <li>
