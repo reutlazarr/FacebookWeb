@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import "./Post.css";
 import Comment from "./Comment";
+import { useNavigate } from "react-router-dom";
 
 function Post({
   id,
+  author,
   content,
   onDelete,
-  userName,
   postDate,
-  userProfilePicture,
   postImage,
-  user,
+  profile,
   isNewPost,
   onUpdate,
 }) {
@@ -22,22 +22,27 @@ function Post({
   const [editedContent, setEditedContent] = useState(content); // Temporary state for edited content
   const [editedImage, setEditedImage] = useState(null); // Temporary state for the new image
   const [showShareOptions, setShowShareOptions] = useState(false);
+  const navigate = useNavigate(); // Initialize navigate
+
+  const fetchUserPosts = (author) => {
+    navigate("/UserProfile", { state: { author: author } });
+  };
 
   const toggleCommentInput = () => {
     setShowCommentInput(!showCommentInput); // Toggle visibility of comment input
   };
 
   const addComment = () => {
-    if (!user) {
+    if (!profile) {
       alert("You must be logged in to post comments.");
       return;
     }
     const newComment = {
       id: new Date().getTime().toString(),
-      userName: user.name,
+      userName: author.name,
       commentDate: new Date().toLocaleDateString(),
       content: commentText,
-      userProfilePicture: user.image,
+      userProfilePicture: author.profilePicture,
     };
     setComments([newComment, ...comments]);
     setCommentText(""); // Reset the input field after adding the comment
@@ -80,17 +85,20 @@ function Post({
     }
   };
 
+
+
   return (
     <div className="post-container">
       <div className="post-header">
         <div className="author-info">
           <img
             className="profile-picture"
-            src={isNewPost ? user.image : userProfilePicture}
+            src={author.profilePicture}
             alt="Profile"
+            onClick={() => fetchUserPosts(author)}
           />
           <div className="author-details">
-            <span className="post-author">{userName}</span>
+            <span className="post-author">{author.name}</span>
             <span className="post-date">{postDate}</span>
           </div>
         </div>
@@ -141,9 +149,8 @@ function Post({
       <div className="post-actions">
         <button onClick={likePost} className={`${liked ? "liked-button" : ""}`}>
           <i
-            className={`bi ${
-              liked ? "bi-hand-thumbs-up-fill" : "bi-hand-thumbs-up"
-            }`}
+            className={`bi ${liked ? "bi-hand-thumbs-up-fill" : "bi-hand-thumbs-up"
+              }`}
           ></i>{" "}
           Like
         </button>

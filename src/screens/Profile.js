@@ -1,40 +1,74 @@
-// Feed.js
 import React, { useState, useEffect } from "react";
-import Post from "../feed_components/Post";
-import { v4 as uuidv4 } from "uuid";
-import "./Feed.css";
-import initialPosts from "../data/db.json";
-import Menu from "../feed_components/Menu";
-import TopBar from "../feed_components/TopBar";
 import { useNavigate } from "react-router-dom";
 import { addPost, deletePost, updatePost } from "../feed_components/HandlePosts";
+import TopBar from "../feed_components/TopBar";
+import Post from "../feed_components/Post";
+import Menu from "../feed_components/Menu";
 
-function Feed({ user }) {
+function Profile({ user }) {
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const navigate = useNavigate();
   const [postsList, setPostsList] = useState([]);
   const [newPostContent, setNewPostContent] = useState("");
   const [postImage, setPostImage] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [profile, setProfile] = useState(null);
+
+  // This ensures the feed will display only if the user signIn and have a token
+  useEffect(() => {
+    console.log(user)
+    if (!user.token) {
+      navigate("/");
+    } else {
+      // Fetch user's posts when the user is present and has a token
+      getUserPosts(user._id);
+    }
+  }, [user, navigate]);
+
+
+  function setProfileUser(setProfile, data) {
+    setProfile({
+      name: data.name,
+      profilePicture: data.profilePicture
+    });
+  }
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!user.token) return; // If no token is provided, do not attempt to fetch user
+      try {
+        const response = await fetch(`http://localhost:8080/api/users/${user.email}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${user.token}` // Include the token in the request
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setProfileUser(setProfile, data);
+
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+    fetchUser();
+  }, [user.token, user.email]); // Dependency on token to refetch if it changes
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode); // Toggle the dark mode state
   };
 
-  // This ensures the feed will display only if the user signIn and have a token
-  useEffect(() => {
-    if (!user.token) {
-      navigate("/");
-    } else {
-      // Fetch user's posts when the user is present and has a token
-      getFeedPosts(user.email);
-    }
-  }, [user, navigate]);
-
+  const handleImageChange = (e) => {
+    setPostImage(e.target.files[0]);
+  };
 
   //handeling posts
   const addPostHandler = async () => {
     await addPost(user, newPostContent, postImage, setPostsList);
-    setNewPostContent("");
+    setNewPostContent('');
     setPostImage(null);
   };
 
@@ -46,10 +80,9 @@ function Feed({ user }) {
     await updatePost(user, postId, updatedContent, updatedImage, postsList, setPostsList);
   };
 
-
-  const getFeedPosts = async (userId) => {
+  const getUserPosts = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/posts/`, {
+      const response = await fetch(`http://localhost:8080/api/users/${user.email}/posts/`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${user.token}`,
@@ -67,60 +100,16 @@ function Feed({ user }) {
     }
   };
 
-  // const addPost = () => {
-  //   const post = {
-  //     id: uuidv4(),
-  //     content: newPostContent,
-  //     userName: profile.name,
-  //     postDate: new Date().toLocaleDateString(),
-  //     postImage: postImage ? URL.createObjectURL(postImage) : null,
-  //     comments: [],
-  //     userProfilePicture: profile.profilePicture,
-  //     isNewPost: true,
-  //   };
-  //   setPostsList([post, ...postsList]);
-  //   setNewPostContent("");
-  //   setPostImage(null); // Reset the selected image after posting
-  // };
-
-  const handleImageChange = (e) => {
-    setPostImage(e.target.files[0]);
-  };
-
-  // const deletePost = (postId) => {
-  //   // Filter out the post with the matching postId
-  //   const updatedPosts = postsList.filter((post) => post.id !== postId);
-  //   // Update the post list without the deleted post
-  //   setPostsList(updatedPosts);
-  // };
-
-  // const updatePost = (postId, updatedContent, updatedImage) => {
-  //   const updatedPosts = postsList.map((post) => {
-  //     if (post.id === postId) {
-  //       return {
-  //         ...post,
-  //         content: updatedContent,
-  //         postImage: updatedImage
-  //           ? URL.createObjectURL(updatedImage)
-  //           : post.postImage,
-  //       };
-  //     }
-  //     return post;
-  //   });
-  //   setPostsList(updatedPosts);
-  // };
-
   return (
     <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
       <TopBar
-        // profile={profile}
         user={user}
         onToggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
       />
       <div className="main-content">
-        <Menu />
-        <div className="posts-container">
+        <Menu></Menu>
+        <div className="post-containers">
           <input
             value={newPostContent}
             onChange={(e) => setNewPostContent(e.target.value)}
@@ -137,26 +126,27 @@ function Feed({ user }) {
               id="file-upload"
               type="file"
               accept="image/*"
-              onChange={handleImageChange}
+              //onChange={handleImageChange}
               className="image-input"
             />
           </label>
           <button className="add-post-button" onClick={addPostHandler}>
             Post
           </button>
-          {postsList.map(post => (
+          {postsList.map((post) => (
             <Post
               key={post._id}
               {...post}
               author={post.author}
               onDelete={() => deletePostHandler(post._id)}
               onUpdate={updatePostHandler}
-              />
-              ))}
+            />
+          ))}
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default Feed;
+
+export default Profile;      
