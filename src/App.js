@@ -6,16 +6,18 @@ import Feed from "./screens/Feed";
 import { useState } from "react";
 
 function App() {
-  // const [token, setToken] = useState(null);
-  const [user, setUser] = useState({ email: "", token: null });
+  const [user, setUser] = useState({
+    name: "",
+    image: null,
+  });
   return (
     <div className="container-fluid">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login setUser={setUser} />} />
+          <Route path="/" element={<Login />} />
           <Route
             path="/register"
-            element={<Registration />}
+            element={<Registration setUser={setUser} />}
           />
           <Route path="/signIn" element={<Feed user={user} />} />
         </Routes>

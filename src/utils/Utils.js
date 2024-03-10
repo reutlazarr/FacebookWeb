@@ -1,4 +1,3 @@
-
 export const saveUserData = (userData) => {
   const users = JSON.parse(sessionStorage.getItem("users")) || [];
   users.push(userData);
@@ -32,34 +31,3 @@ export function deletePost(posts, postId) {
 export function addPost(posts, newPost) {
   return [newPost, ...posts];
 }
-
-// call the server, try to register the user with the userData
-export const handleRegistration = async (userData) => {
-  const response = await fetch('http://localhost:8080/api/users', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-    });
-    if (!response.ok && !response.status === 409) { 
-      throw new Error('Failed to register');
-    }
-  return response;
-};
-
-// call the server, try to login with the userData
-export const login = async (userData) => {
-  const response = await fetch('http://localhost:8080/api/tokens', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-    });
-    if (!response.ok && !response.status === 409) { 
-      throw new Error('Failed to log in');
-    }
-  return response;
-};
-  
