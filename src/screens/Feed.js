@@ -1,66 +1,22 @@
 // Feed.js
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Post from "../feed_components/Post";
 import { v4 as uuidv4 } from "uuid";
 import "./Feed.css";
 import initialPosts from "../data/db.json";
 import Menu from "../feed_components/Menu";
 import TopBar from "../feed_components/TopBar";
-import { useNavigate } from "react-router-dom";
+import { redirect } from "react-router-dom";
 
 function Feed({ user }) {
-  const navigate = useNavigate();
   const [postsList, setPostsList] = useState(initialPosts);
   const [newPostContent, setNewPostContent] = useState("");
   const [postImage, setPostImage] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [profile, setProfile] = useState(null);
 
-  function setProfileUser(setProfile, data) {
-    setProfile({
-      name: data.name,
-      profilePicture: data.profilePicture
-    });
+  if (!user) {
+    redirect("/register");
   }
-
-  // This ensures the feed will display only if the user signIn and have a token
-  useEffect(() => {
-    if (!user.token) {
-      navigate("/");
-    }
-  }, [user, navigate]);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!user.token) return; // If no token is provided, do not attempt to fetch user
-      try {
-        console.log("Fetching user profile...");
-        console.log(user.token);
-        console.log(user.email);
-        const response = await fetch(`http://localhost:8080/api/users/${user.email}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `bearer ${user.token}` // Include the token in the request
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data)
-        setProfileUser(setProfile, data);
-        //setProfile(data); // Assuming the response contains an object with the user key
-        console.log("profile");
-        console.log({profile});
-        console.log(profile.name);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-    fetchUser();
-  }, [user.token, user.email]); // Dependency on token to refetch if it changes
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode); // Toggle the dark mode state
@@ -112,7 +68,7 @@ function Feed({ user }) {
   return (
     <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
       <TopBar
-        profile={profile}
+        user={user}
         onToggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
       />
