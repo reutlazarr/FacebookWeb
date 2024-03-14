@@ -1,9 +1,17 @@
 import "./Menu.css";
+import { useNavigate } from "react-router-dom";
+
 
 function Menu() {
+  const navigate = useNavigate();
+
+const friendsPageTaker = () => {
+  navigate("/FriendsPage");
+};
+
   return (
     <div className="menu">
-      <a href="#" className="menu-item">
+      <a href="#" className="menu-item" onClick={friendsPageTaker}>
         <i className="bi bi-person-circle"></i>
         <span>Friends</span>
       </a>
