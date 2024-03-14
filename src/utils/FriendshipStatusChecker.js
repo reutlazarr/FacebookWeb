@@ -127,7 +127,7 @@ function FriendshipStatusChecker({ user, recipientEmail }) {
             case 'None':
                 return <button onClick={() => sendFriendRequest()}>Add Friend</button>;
             default:
-                return <p>Checking friendship status...</p>;
+                return <p> </p>;
         }
     };
 
