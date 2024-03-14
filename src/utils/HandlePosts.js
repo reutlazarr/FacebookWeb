@@ -2,10 +2,6 @@
 
 export async function addPost(user, newPostContent, postImage, setPostsList) {
     try {
-        //const imageBase64 = postImage ? await convertToBase64(postImage) : null;
-
-        console.log("image: " + postImage); // Check if this logs a valid base64 string.
-
         const postData = {
             date: new Date().toISOString(), // Assuming you want to set the post date here
             content: newPostContent,
@@ -26,6 +22,8 @@ export async function addPost(user, newPostContent, postImage, setPostsList) {
         }
 
         const newPost = await response.json();
+        console.log("new post: " + newPost)
+        console.log("new post image: " + newPost.image)
         setPostsList(postsList => [newPost, ...postsList]);
     } catch (error) {
         console.error("Error adding post:", error);
