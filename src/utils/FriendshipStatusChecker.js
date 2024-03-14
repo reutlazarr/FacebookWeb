@@ -82,6 +82,7 @@ function FriendshipStatusChecker({ user, recipientEmail }) {
     };
 
     const unfriendUser = async () => {
+        cancelFriendRequest()
         // Similar implementation for unfriending a user
     };
 
