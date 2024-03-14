@@ -1,19 +1,5 @@
 // postFunctions.js
 
-function convertToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            const base64String = reader.result.split(',')[1];
-            resolve(base64String);
-        };
-        reader.onerror = (error) => {
-            reject(error);
-        };
-    });
-}
-
 export async function addPost(user, newPostContent, postImage, setPostsList) {
     try {
         //const imageBase64 = postImage ? await convertToBase64(postImage) : null;
