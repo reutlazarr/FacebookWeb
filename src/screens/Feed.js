@@ -1,9 +1,7 @@
 // Feed.js
 import React, { useState, useEffect } from "react";
 import Post from "../feed_components/Post";
-import { v4 as uuidv4 } from "uuid";
 import "./Feed.css";
-import initialPosts from "../data/db.json";
 import Menu from "../feed_components/Menu";
 import TopBar from "../feed_components/TopBar";
 import { useNavigate } from "react-router-dom";
@@ -68,32 +66,6 @@ function Feed({ user }) {
     }
   };
 
-  // const addPost = () => {
-  //   const post = {
-  //     id: uuidv4(),
-  //     content: newPostContent,
-  //     userName: profile.name,
-  //     postDate: new Date().toLocaleDateString(),
-  //     postImage: postImage ? URL.createObjectURL(postImage) : null,
-  //     comments: [],
-  //     userProfilePicture: profile.profilePicture,
-  //     isNewPost: true,
-  //   };
-  //   setPostsList([post, ...postsList]);
-  //   setNewPostContent("");
-  //   setPostImage(null); // Reset the selected image after posting
-  // };
-
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       setPostImage(reader.result);
-  //     }
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]; // Get the first selected file
@@ -105,31 +77,6 @@ function Feed({ user }) {
       reader.readAsDataURL(file); // Read the file as a Data URL
     }
   };
-
-
-  // const deletePost = (postId) => {
-  //   // Filter out the post with the matching postId
-  //   const updatedPosts = postsList.filter((post) => post.id !== postId);
-  //   // Update the post list without the deleted post
-  //   setPostsList(updatedPosts);
-  // };
-
-  // const updatePost = (postId, updatedContent, updatedImage) => {
-  //   const updatedPosts = postsList.map((post) => {
-  //     if (post.id === postId) {
-  //       return {
-  //         ...post,
-  //         content: updatedContent,
-  //         postImage: updatedImage
-  //           ? URL.createObjectURL(updatedImage)
-  //           : post.postImage,
-  //       };
-  //     }
-  //     return post;
-  //   });
-  //   setPostsList(updatedPosts);
-  // };
-
 
   return (
     <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
