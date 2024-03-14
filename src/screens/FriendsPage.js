@@ -11,15 +11,15 @@ function FriendsPage({ user }) {
     const [profile, setProfile] = useState(null);
     const [friends, setFriends] = useState([]); // State to hold the friends list
     const location = useLocation();
-
+    const { email } = location.state || { email: user.email };
     // This ensures the feed will display only if the user signIn and have a token
     useEffect(() => {
         if (!user.token) {
             navigate("/");
         } else {
-            fetchFriends()
+            email && fetchFriends(email);
         }
-    }, [user, navigate]);
+    }, [user, navigate, email]);
 
 
     function setProfileUser(setProfile, data) {
@@ -54,9 +54,9 @@ function FriendsPage({ user }) {
         fetchUser();
     }, [user.token, user.email]); // Dependency on token to refetch if it changes
 
-    const fetchFriends = async () => {
+    const fetchFriends = async (email) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/users/${user.email}/friends`, {
+            const response = await fetch(`http://localhost:8080/api/users/${email}/friends`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
