@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { addPost, deletePost, updatePost } from "../feed_components/HandlePosts";
+import { addPost, deletePost, updatePost } from "../utils/HandlePosts";
 import TopBar from "../feed_components/TopBar";
 import Post from "../feed_components/Post";
 import Menu from "../feed_components/Menu";
