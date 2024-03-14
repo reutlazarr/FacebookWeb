@@ -6,6 +6,7 @@ import Post from "../feed_components/Post";
 import Menu from "../feed_components/Menu";
 import { useLocation } from "react-router-dom";
 import FriendshipStatusChecker from "../utils/FriendshipStatusChecker.js";
+import "./UserProfile.css"
 
 function UserProfile({ user }) {
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -115,18 +116,18 @@ function UserProfile({ user }) {
             <div className="main-content">
                 <Menu />
                 <div className="post-containers">
+                <div className="user-profile">
+                        <img src={author.profilePicture} alt="Profile" className="profile-picture" />
+                        <h3>{author.name}</h3>
+                        <button onClick={() => navigate('/FriendsPage', { state: { email: author.email } })}>{author.name}'s friends </button>
+                        <FriendshipStatusChecker user={user} recipientEmail={author.email} />
+                    </div>
                     <input value={newPostContent} onChange={(e) => setNewPostContent(e.target.value)} placeholder="What's on your mind?" className="post-input" />
                     <label htmlFor="file-upload" className="file-upload-label" title="Upload photo">
                         <i className="bi bi-images"></i>
                         <input id="file-upload" type="file" accept="image/*" onChange={handleImageChange} className="image-input" />
                     </label>
                     <button className="add-post-button" onClick={addPostHandler}>Post</button>
-                    <div className="user-profile">
-                        <img src={author.profilePicture} alt="Profile" className="profile-picture" />
-                        <h3>{author.name}</h3>
-                        <button onClick={() => navigate('/FriendsPage', { state: { email: author.email } })}>{author.name}'s friends </button>
-                        <FriendshipStatusChecker user={user} recipientEmail={author.email} />
-                    </div>
                     {postsList.map((post) => (
                         <Post key={post._id} {...post} author={post.author} postImage={post.image} onDelete={() => deletePostHandler(post._id)} onUpdate={updatePostHandler} />
                     ))}
