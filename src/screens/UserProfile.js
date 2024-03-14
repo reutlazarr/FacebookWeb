@@ -41,7 +41,6 @@ function UserProfile({ user }) {
             if (!user.token) return; // If no token is provided, do not attempt to fetch user
             try {
                 const response = await fetch(`http://localhost:8080/api/users/${author.email}`, {
-                    //const response = await fetch(`http://localhost:8080/api/users/${email}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
