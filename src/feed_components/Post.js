@@ -91,6 +91,7 @@ function Post({
     <div className="post-container">
       <div className="post-header">
         <div className="author-info">
+          
           <img
             className="profile-picture"
             src={author.profilePicture}
