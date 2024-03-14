@@ -63,7 +63,14 @@ function UserProfile({ user }) {
 
 
     const handleImageChange = (e) => {
-        setPostImage(e.target.files[0]);
+        const file = e.target.files[0]; // Get the first selected file
+        if (file) {
+            const reader = new FileReader(); // Create a new FileReader instance
+            reader.onload = () => {
+                setPostImage(reader.result); // Set the selected image to the reader's result (base64 encoded)
+            };
+            reader.readAsDataURL(file); // Read the file as a Data URL
+        }
     };
 
     //handeling posts
@@ -117,10 +124,11 @@ function UserProfile({ user }) {
                     <div className="user-profile">
                         <img src={author.profilePicture} alt="Profile" className="profile-picture" />
                         <h3>{author.name}</h3>
+                        <button onClick={() => navigate('/FriendsPage', { state: { email: author.email } })}>{author.name}'s friends </button>
                         <FriendshipStatusChecker user={user} recipientEmail={author.email} />
                     </div>
                     {postsList.map((post) => (
-                        <Post key={post._id} {...post} author={post.author} onDelete={() => deletePostHandler(post._id)} onUpdate={updatePostHandler} />
+                        <Post key={post._id} {...post} author={post.author} postImage={post.image} onDelete={() => deletePostHandler(post._id)} onUpdate={updatePostHandler} />
                     ))}
                 </div>
             </div>
