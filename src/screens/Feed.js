@@ -7,7 +7,7 @@ import initialPosts from "../data/db.json";
 import Menu from "../feed_components/Menu";
 import TopBar from "../feed_components/TopBar";
 import { useNavigate } from "react-router-dom";
-import { addPost, deletePost, updatePost } from "../feed_components/HandlePosts";
+import { addPost, deletePost, updatePost } from "../utils/HandlePosts";
 
 function Feed({ user }) {
   const navigate = useNavigate();
@@ -30,12 +30,14 @@ function Feed({ user }) {
     }
   }, [user, navigate]);
 
-
-  //handeling posts
-  const addPostHandler = async () => {
-    await addPost(user, newPostContent, postImage, setPostsList);
-    setNewPostContent("");
-    setPostImage(null);
+   //handeling posts
+   const addPostHandler = async () => {
+    const updatedPosts = await addPost(user, newPostContent, postImage, setPostsList );
+    if (updatedPosts) {
+      //setPostsList(updatedPosts); // Update the state with the new list of posts
+      setNewPostContent("");
+      setPostImage(null);
+    }
   };
 
   const deletePostHandler = async (postId) => {
@@ -45,7 +47,6 @@ function Feed({ user }) {
   const updatePostHandler = async (postId, updatedContent, updatedImage) => {
     await updatePost(user, postId, updatedContent, updatedImage, postsList, setPostsList);
   };
-
 
   const getFeedPosts = async (userId) => {
     try {
@@ -83,9 +84,28 @@ function Feed({ user }) {
   //   setPostImage(null); // Reset the selected image after posting
   // };
 
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       setPostImage(reader.result);
+  //     }
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
   const handleImageChange = (e) => {
-    setPostImage(e.target.files[0]);
+    const file = e.target.files[0]; // Get the first selected file
+    if (file) {
+      const reader = new FileReader(); // Create a new FileReader instance
+      reader.onload = () => {
+        setPostImage(reader.result); // Set the selected image to the reader's result (base64 encoded)
+      };
+      reader.readAsDataURL(file); // Read the file as a Data URL
+    }
   };
+
 
   // const deletePost = (postId) => {
   //   // Filter out the post with the matching postId
@@ -109,6 +129,7 @@ function Feed({ user }) {
   //   });
   //   setPostsList(updatedPosts);
   // };
+
 
   return (
     <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
@@ -149,10 +170,11 @@ function Feed({ user }) {
               key={post._id}
               {...post}
               author={post.author}
+              src={post.postImage}
               onDelete={() => deletePostHandler(post._id)}
               onUpdate={updatePostHandler}
-              />
-              ))}
+            />
+          ))}
         </div>
       </div>
     </div>
