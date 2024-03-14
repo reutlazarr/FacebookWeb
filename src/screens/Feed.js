@@ -66,7 +66,6 @@ function Feed({ user }) {
     }
   };
 
-
   const handleImageChange = (e) => {
     const file = e.target.files[0]; // Get the first selected file
     if (file) {
@@ -81,7 +80,6 @@ function Feed({ user }) {
   return (
     <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
       <TopBar
-        // profile={profile}
         user={user}
         onToggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
@@ -117,7 +115,7 @@ function Feed({ user }) {
               key={post._id}
               {...post}
               author={post.author}
-              src={post.postImage}
+              postImage={post.image}
               onDelete={() => deletePostHandler(post._id)}
               onUpdate={updatePostHandler}
             />
