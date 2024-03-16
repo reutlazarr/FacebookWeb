@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { addPost, deletePost, updatePost } from "../feed_components/HandlePosts";
+import { addPost, deletePost, updatePost } from "../utils/HandlePosts";
 import TopBar from "../feed_components/TopBar";
 import Post from "../feed_components/Post";
 import Menu from "../feed_components/Menu";
 import { useLocation } from "react-router-dom";
-
+import FriendshipStatusChecker from "../utils/FriendshipStatusChecker.js";
+import "./UserProfile.css"
 
 function UserProfile({ user }) {
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -19,7 +20,6 @@ function UserProfile({ user }) {
 
     // This ensures the feed will display only if the user signIn and have a token
     useEffect(() => {
-        console.log(user)
         if (!user.token) {
             navigate("/");
         } else {
@@ -42,7 +42,6 @@ function UserProfile({ user }) {
             if (!user.token) return; // If no token is provided, do not attempt to fetch user
             try {
                 const response = await fetch(`http://localhost:8080/api/users/${author.email}`, {
-                    //const response = await fetch(`http://localhost:8080/api/users/${email}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -63,12 +62,16 @@ function UserProfile({ user }) {
         fetchUser();
     }, [user.token, user.email]); // Dependency on token to refetch if it changes
 
-    const toggleDarkMode = () => {
-        setIsDarkMode(!isDarkMode); // Toggle the dark mode state
-    };
 
     const handleImageChange = (e) => {
-        setPostImage(e.target.files[0]);
+        const file = e.target.files[0]; // Get the first selected file
+        if (file) {
+            const reader = new FileReader(); // Create a new FileReader instance
+            reader.onload = () => {
+                setPostImage(reader.result); // Set the selected image to the reader's result (base64 encoded)
+            };
+            reader.readAsDataURL(file); // Read the file as a Data URL
+        }
     };
 
     //handeling posts
@@ -106,81 +109,34 @@ function UserProfile({ user }) {
         }
     };
 
-    const sendFriendRequest = async () => {
-        try {
-          const response = await fetch(`http://localhost:8080/api/users/${author.email}/friends`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${user.token}`,
-            },
-            body: JSON.stringify({ recipient: author.email }),
-          });
-    
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-    
-          const result = await response.json();
-          console.log('Friend request sent:', result);
-          // Optionally, provide feedback to the user or update the UI
-        } catch (error) {
-          console.error("Error sending friend request:", error);
-        }
-      };
 
     return (
         <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
-            <TopBar
-                user={user}
-                onToggleDarkMode={toggleDarkMode}
-                isDarkMode={isDarkMode}
-            />
+            <TopBar user={user} onToggleDarkMode={() => setIsDarkMode(!isDarkMode)} isDarkMode={isDarkMode} />
             <div className="main-content">
                 <Menu />
                 <div className="post-containers">
-                    <input
-                        value={newPostContent}
-                        onChange={(e) => setNewPostContent(e.target.value)}
-                        placeholder="What's on your mind?"
-                        className="post-input"
-                    />
-                    <label
-                        htmlFor="file-upload"
-                        className="file-upload-label"
-                        title="Upload photo"
-                    >
-                        <i className="bi bi-images"></i>
-                        <input
-                            id="file-upload"
-                            type="file"
-                            accept="image/*"
-                            //onChange={handleImageChange}
-                            className="image-input"
-                        />
-                    </label>
-                    <button className="add-post-button" onClick={addPostHandler}>
-                        Post
-                    </button>
                     <div className="user-profile">
-                    <img src={author.profilePicture} alt="Profile" className="profile-picture" />
-                    <h3>{author.name}</h3>
-                    <button onClick={sendFriendRequest} className="add-friend-button">Add Friend! </button>
+                        <img src={author.profilePicture} alt="Profile" className="profile-picture" />
+                        <h3>{author.name}</h3>
+                        <div className="friends-button">
+                            <button onClick={() => navigate('/FriendsPage', { state: { email: author.email } })}><i className="bi bi-person-circle" title="Friends"></i> </button>
+                            <FriendshipStatusChecker user={user} recipientEmail={author.email} />
+                        </div>
                     </div>
+                    <input value={newPostContent} onChange={(e) => setNewPostContent(e.target.value)} placeholder="What's on your mind?" className="post-input" />
+                    <label htmlFor="file-upload" className="file-upload-label" title="Upload photo">
+                        <i className="bi bi-images"></i>
+                        <input id="file-upload" type="file" accept="image/*" onChange={handleImageChange} className="image-input" />
+                    </label>
+                    <button className="add-post-button" onClick={addPostHandler}>Post</button>
                     {postsList.map((post) => (
-                        <Post
-                            key={post._id}
-                            {...post}
-                            author={post.author}
-                            onDelete={() => deletePostHandler(post._id)}
-                            onUpdate={updatePostHandler}
-                        />
+                        <Post key={post._id} {...post} author={post.author} postImage={post.image} onDelete={() => deletePostHandler(post._id)} onUpdate={updatePostHandler} />
                     ))}
                 </div>
             </div>
         </div>
     );
-};
+}
 
-
-export default UserProfile;      
+export default UserProfile;

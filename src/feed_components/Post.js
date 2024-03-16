@@ -20,7 +20,7 @@ function Post({
   const [liked, setLiked] = useState(false); // State to track likes
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState(content); // Temporary state for edited content
-  const [editedImage, setEditedImage] = useState(null); // Temporary state for the new image
+  const [editedImage, setEditedImage] = useState(null);// Temporary state for the new image
   const [showShareOptions, setShowShareOptions] = useState(false);
   const navigate = useNavigate(); // Initialize navigate
 
@@ -73,12 +73,20 @@ function Post({
   };
 
   const handleImageChange = (e) => {
-    setEditedImage(e.target.files[0]);
+    const file = e.target.files[0]; // Get the first selected file
+    if (file) {
+      const reader = new FileReader(); // Create a new FileReader instance
+      reader.onload = () => {
+        setEditedImage(reader.result); // Set the selected image to the reader's result (base64 encoded)
+      };
+      reader.readAsDataURL(file); // Read the file as a Data URL
+    }
   };
+
 
   const saveChanges = () => {
     if (onUpdate) {
-      onUpdate(id, editedContent, editedImage);
+      onUpdate(editedContent, editedImage || postImage);
       // Assuming `onUpdate` handles the logic for the image, including creating a URL if necessary
       setEditedImage(null); // Clear the temporary edited image state
       setIsEditMode(false); // Exit edit mode
@@ -86,11 +94,11 @@ function Post({
   };
 
 
-
   return (
     <div className="post-container">
       <div className="post-header">
         <div className="author-info">
+
           <img
             className="profile-picture"
             src={author.profilePicture}

@@ -11,7 +11,8 @@ function TopBar({ user, onToggleDarkMode, isDarkMode }) {
   function setProfileUser(setProfile, data) {
     setProfile({
       name: data.name,
-      profilePicture: data.profilePicture
+      profilePicture: data.profilePicture,
+      email: data.email,
     });
   }
 
@@ -19,10 +20,17 @@ function TopBar({ user, onToggleDarkMode, isDarkMode }) {
     navigate("/"); // Redirect to login page
   };
 
-  const profilePage = () => {
-    navigate("/Profile");
+  const profilePage = (author) => {
+    navigate("/UserProfile", { state: { author: profile } });
   };
 
+  const UserSettings = (author) => {
+    navigate("/UserEditPage", { state: { author: profile } });
+  };
+
+  // const fetchUserPosts = (author) => {
+  //   navigate("/UserProfile", { state: { author: author } });
+  // };
   const feedTaker = () => {
     navigate("/SignIn");
   };
@@ -108,13 +116,13 @@ function TopBar({ user, onToggleDarkMode, isDarkMode }) {
                 </button>
               </li>
               <li>
-                <button className="dropdown-item">
-                Settings & privacy
+                <button className="dropdown-item" onClick={UserSettings}>
+                  Settings
                 </button>
               </li>
               <li>
                 <button className="dropdown-item">
-                Help & support
+                  Help & support
                 </button>
               </li>
               <li>

@@ -1,13 +1,11 @@
 // Feed.js
 import React, { useState, useEffect } from "react";
 import Post from "../feed_components/Post";
-import { v4 as uuidv4 } from "uuid";
 import "./Feed.css";
-import initialPosts from "../data/db.json";
 import Menu from "../feed_components/Menu";
 import TopBar from "../feed_components/TopBar";
 import { useNavigate } from "react-router-dom";
-import { addPost, deletePost, updatePost } from "../feed_components/HandlePosts";
+import { addPost, deletePost, updatePost } from "../utils/HandlePosts";
 
 function Feed({ user }) {
   const navigate = useNavigate();
@@ -30,12 +28,14 @@ function Feed({ user }) {
     }
   }, [user, navigate]);
 
-
-  //handeling posts
-  const addPostHandler = async () => {
-    await addPost(user, newPostContent, postImage, setPostsList);
-    setNewPostContent("");
-    setPostImage(null);
+   //handeling posts
+   const addPostHandler = async () => {
+    const updatedPosts = await addPost(user, newPostContent, postImage, setPostsList );
+    if (updatedPosts) {
+      //setPostsList(updatedPosts); // Update the state with the new list of posts
+      setNewPostContent("");
+      setPostImage(null);
+    }
   };
 
   const deletePostHandler = async (postId) => {
@@ -45,7 +45,6 @@ function Feed({ user }) {
   const updatePostHandler = async (postId, updatedContent, updatedImage) => {
     await updatePost(user, postId, updatedContent, updatedImage, postsList, setPostsList);
   };
-
 
   const getFeedPosts = async (userId) => {
     try {
@@ -67,53 +66,20 @@ function Feed({ user }) {
     }
   };
 
-  // const addPost = () => {
-  //   const post = {
-  //     id: uuidv4(),
-  //     content: newPostContent,
-  //     userName: profile.name,
-  //     postDate: new Date().toLocaleDateString(),
-  //     postImage: postImage ? URL.createObjectURL(postImage) : null,
-  //     comments: [],
-  //     userProfilePicture: profile.profilePicture,
-  //     isNewPost: true,
-  //   };
-  //   setPostsList([post, ...postsList]);
-  //   setNewPostContent("");
-  //   setPostImage(null); // Reset the selected image after posting
-  // };
-
   const handleImageChange = (e) => {
-    setPostImage(e.target.files[0]);
+    const file = e.target.files[0]; // Get the first selected file
+    if (file) {
+      const reader = new FileReader(); // Create a new FileReader instance
+      reader.onload = () => {
+        setPostImage(reader.result); // Set the selected image to the reader's result (base64 encoded)
+      };
+      reader.readAsDataURL(file); // Read the file as a Data URL
+    }
   };
-
-  // const deletePost = (postId) => {
-  //   // Filter out the post with the matching postId
-  //   const updatedPosts = postsList.filter((post) => post.id !== postId);
-  //   // Update the post list without the deleted post
-  //   setPostsList(updatedPosts);
-  // };
-
-  // const updatePost = (postId, updatedContent, updatedImage) => {
-  //   const updatedPosts = postsList.map((post) => {
-  //     if (post.id === postId) {
-  //       return {
-  //         ...post,
-  //         content: updatedContent,
-  //         postImage: updatedImage
-  //           ? URL.createObjectURL(updatedImage)
-  //           : post.postImage,
-  //       };
-  //     }
-  //     return post;
-  //   });
-  //   setPostsList(updatedPosts);
-  // };
 
   return (
     <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
       <TopBar
-        // profile={profile}
         user={user}
         onToggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
@@ -149,10 +115,11 @@ function Feed({ user }) {
               key={post._id}
               {...post}
               author={post.author}
+              postImage={post.image}
               onDelete={() => deletePostHandler(post._id)}
-              onUpdate={updatePostHandler}
-              />
-              ))}
+              onUpdate={(updatedContent, updatedImage) => updatePostHandler(post._id, updatedContent, updatedImage)}
+            />
+          ))}
         </div>
       </div>
     </div>

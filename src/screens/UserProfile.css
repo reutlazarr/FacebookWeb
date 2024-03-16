@@ -1,0 +1,108 @@
+.user-profile {
+    display: flex;
+    align-items: left;
+    margin-top: 5%;
+    background-color: whitesmoke;
+    flex-direction: row;
+    text-align: right;
+
+}
+
+.user-profile .profile-picture {
+    width: 150px;
+    /* Adjust size as needed */
+    height: 150px;
+    /* Adjust size as needed */
+    border-radius: 50%;
+    /* Half of width/height to make it circular */
+    margin-bottom: 5%;
+
+
+}
+
+.profile-picture {
+    width: 45px;
+    height: 45px;
+    border-radius: 30px;
+    /* Half of width and height to make it circular */
+    object-fit: cover;
+}
+
+.user-profile h3 {
+    margin: 0;
+    font-size: 25px;
+    font-weight: bold;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin-top: 25%;
+}
+
+.friends-button {
+    margin-top: 23%;
+    font-size: 100%;
+
+}
+
+.user-profile button {
+    margin-left: 20%;
+}
+
+
+.user-profile button:hover {
+    background-color: #365899;
+}
+
+
+.post-input {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 16px;
+    border: 1px solid #ccc;
+    margin-bottom: 8px;
+}
+
+.add-post-button {
+    background-color: #4267B2;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.add-post-button:hover {
+    background-color: #365899;
+}
+
+.file-upload-label {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #4267B2;
+    color: white;
+    border-radius: 16px;
+    cursor: pointer;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.file-upload-label:hover {
+    background-color: #365899;
+}
+
+.image-input {
+    display: none;
+}
+
+.user-profile button {
+    background-color: #4267B2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.user-profile button:hover {
+    background-color: #4267B2;
+}
