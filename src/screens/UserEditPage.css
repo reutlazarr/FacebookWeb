@@ -1,0 +1,71 @@
+.user-edit-container {
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+    min-height: 100vh;
+
+}
+
+.dark-mode {
+    background-color: #333;
+    color: #f4f4f4;
+}
+
+.user-edit-form {
+    max-width: 500px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 5%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.form-group input[type="file"] {
+    background: #fff;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.delete-user-button {
+    background-color: #dc3545;
+    /* Bootstrap danger color for reference */
+    color: white;
+    margin-top: 20px;
+    /* Spacing between update and delete buttons */
+    /* Other styling similar to the update button */
+}
+
+.delete-user-button:hover {
+    background-color: #c82333;
+    /* Darken on hover */
+}
