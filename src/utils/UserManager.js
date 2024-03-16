@@ -1,7 +1,8 @@
 // Function to update user details
-export async function updateUser(user, userId, userData, setUser) {
+
+export async function updateUser(user, userData, setUser) {
     try {
-        const response = await fetch(`http://foo.com/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${user.email}`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${user.token}`,
@@ -23,9 +24,9 @@ export async function updateUser(user, userId, userData, setUser) {
 }
 
 // Function to delete user
-export async function deleteUser(user, userId, navigate) {
+export async function deleteUser(user, navigate) {
     try {
-        const response = await fetch(`http://foo.com/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${user.email}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${user.token}`,
@@ -37,7 +38,7 @@ export async function deleteUser(user, userId, navigate) {
         }
 
         console.log("User deleted successfully");
-        navigate('/login'); // Redirect to login or other appropriate page after deletion
+        navigate('/'); // Redirect to login or other appropriate page after deletion
     } catch (error) {
         console.error("Error deleting user:", error);
     }

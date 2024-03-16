@@ -29,31 +29,6 @@ function FriendsPage({ user }) {
         });
     }
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            if (!user.token) return; // If no token is provided, do not attempt to fetch user
-            try {
-                const response = await fetch(`http://localhost:8080/api/users/${user.email}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `bearer ${user.token}` // Include the token in the request
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                setProfileUser(setProfile, data);
-
-            } catch (error) {
-                console.error("Error fetching user:", error);
-            }
-        };
-        fetchUser();
-    }, [user.token, user.email]); // Dependency on token to refetch if it changes
-
     const fetchFriends = async (email) => {
         try {
             const response = await fetch(`http://localhost:8080/api/users/${email}/friends`, {

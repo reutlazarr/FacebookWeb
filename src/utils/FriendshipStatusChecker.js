@@ -23,7 +23,23 @@ function FriendshipStatusChecker({ user, recipientEmail }) {
             }
 
             const result = await response.json();
-            setFriendshipStatus(result.status);
+            console.log("result:", JSON.stringify(result));
+            if (result.message && result.message === 'friendRequest not found') {
+                setFriendshipStatus('None');
+                //setFriendshipStatus(result.status);
+
+            }
+            if (result.status === 'pending') {
+                setFriendshipStatus('Pending');
+            }
+
+            if (result.status === 'received') {
+                setFriendshipStatus('Received')
+
+            }
+            if (result.status === 'accepted') {
+                setFriendshipStatus('Accepted')
+            }
 
         } catch (error) {
             console.error("Error checking friendship status:", error);
