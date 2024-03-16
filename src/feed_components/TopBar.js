@@ -24,6 +24,10 @@ function TopBar({ user, onToggleDarkMode, isDarkMode }) {
     navigate("/UserProfile", { state: { author: profile } });
   };
 
+  const UserSettings = (author) => {
+    navigate("/UserEditPage", { state: { author: profile } });
+  };
+
   // const fetchUserPosts = (author) => {
   //   navigate("/UserProfile", { state: { author: author } });
   // };
@@ -112,8 +116,8 @@ function TopBar({ user, onToggleDarkMode, isDarkMode }) {
                 </button>
               </li>
               <li>
-                <button className="dropdown-item">
-                  Settings & privacy
+                <button className="dropdown-item" onClick={UserSettings}>
+                  Settings
                 </button>
               </li>
               <li>
