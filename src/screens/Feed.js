@@ -28,9 +28,9 @@ function Feed({ user }) {
     }
   }, [user, navigate]);
 
-   //handeling posts
-   const addPostHandler = async () => {
-    const updatedPosts = await addPost(user, newPostContent, postImage, setPostsList );
+  //handeling posts
+  const addPostHandler = async () => {
+    const updatedPosts = await addPost(user, newPostContent, postImage, setPostsList);
     if (updatedPosts) {
       //setPostsList(updatedPosts); // Update the state with the new list of posts
       setNewPostContent("");
@@ -107,6 +107,7 @@ function Feed({ user }) {
               className="image-input"
             />
           </label>
+          {postImage && <img src={postImage} alt="Preview" className="post-image-preview" />}
           <button className="add-post-button" onClick={addPostHandler}>
             Post
           </button>
