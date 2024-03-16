@@ -116,11 +116,13 @@ function UserProfile({ user }) {
             <div className="main-content">
                 <Menu />
                 <div className="post-containers">
-                <div className="user-profile">
+                    <div className="user-profile">
                         <img src={author.profilePicture} alt="Profile" className="profile-picture" />
                         <h3>{author.name}</h3>
-                        <button onClick={() => navigate('/FriendsPage', { state: { email: author.email } })}>{author.name}'s friends </button>
-                        <FriendshipStatusChecker user={user} recipientEmail={author.email} />
+                        <div className="friends-button">
+                            <button onClick={() => navigate('/FriendsPage', { state: { email: author.email } })}><i className="bi bi-person-circle" title="Friends"></i> </button>
+                            <FriendshipStatusChecker user={user} recipientEmail={author.email} />
+                        </div>
                     </div>
                     <input value={newPostContent} onChange={(e) => setNewPostContent(e.target.value)} placeholder="What's on your mind?" className="post-input" />
                     <label htmlFor="file-upload" className="file-upload-label" title="Upload photo">
