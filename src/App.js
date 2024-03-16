@@ -6,6 +6,7 @@ import Feed from "./screens/Feed";
 import { useState } from "react";
 import UserProfile from "./screens/UserProfile";
 import FriendsPage from "./screens/FriendsPage";
+import UserEditPage from "./screens/UserEditPage";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/signIn" element={<Feed user={user} />} />
           <Route path="/UserProfile" element={<UserProfile user={user} />} />
           <Route path="/FriendsPage" element={<FriendsPage user={user} />} />
+          <Route path="/UserEditPage" element={<UserEditPage user={user} setUser={setUser} />} />
         </Routes>
       </BrowserRouter>
     </div>
