@@ -117,7 +117,7 @@ function Feed({ user }) {
               author={post.author}
               postImage={post.image}
               onDelete={() => deletePostHandler(post._id)}
-              onUpdate={updatePostHandler}
+              onUpdate={(updatedContent, updatedImage) => updatePostHandler(post._id, updatedContent, updatedImage)}
             />
           ))}
         </div>
