@@ -128,8 +128,8 @@ function Registration() {
       const userData = {
         email: formData.email,
         password: formData.password,
-        userName: formData.firstName + " " + formData.lastName,
-        userProfile: formData.selectedImage,
+        name: formData.firstName + " " + formData.lastName,
+        profilePicture: formData.selectedImage,
       };
       try {
         const response = await handleRegistration(userData);

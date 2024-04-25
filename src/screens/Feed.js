@@ -77,6 +77,27 @@ function Feed({ user }) {
     }
   };
 
+  const likePost = async (postId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/Users/${user.email}/posts/${postId}`, {
+        method: "Post",
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      console.log("Post liked successfully");
+      // Handle state update or re-fetch posts here if necessary
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
   return (
     <div className={`feed-container ${isDarkMode ? "dark-mode" : ""}`}>
       <TopBar
@@ -115,6 +136,7 @@ function Feed({ user }) {
             <Post
               key={post._id}
               {...post}
+              likePost={() => likePost(post._id)}
               author={post.author}
               postImage={post.image}
               onDelete={() => deletePostHandler(post._id)}

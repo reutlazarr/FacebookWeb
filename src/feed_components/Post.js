@@ -13,6 +13,7 @@ function Post({
   profile,
   isNewPost,
   onUpdate,
+  likePost,
 }) {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
@@ -60,9 +61,31 @@ function Post({
     );
   };
 
-  const likePost = () => {
-    setLiked(!liked); // change to true- tho post got like
+  const handleLikePost = () => {
+    setLiked(!liked); // Toggle the liked state
+    likePost(id); // Call the likePost function passed from the parent, with the post's ID
   };
+
+
+  // const likePost = () => {
+  //   setLiked(!liked); // Toggle the liked state
+
+  //   // Send a request to the server to update the like status
+  //   fetch(`http://localhost:8080/api/users/${user.email}/posts/${id}`, {
+  //     method: 'POST', // Or PATCH, depending on your API design
+  //     headers: {
+  //       'Authorization': `Bearer ${user.token}`, // Assuming you have a user object with a token
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       console.log('Like updated:', data);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error updating like:', error);
+  //     });
+  // };
 
   const toggleShareOptions = () => {
     setShowShareOptions(!showShareOptions);
@@ -155,7 +178,8 @@ function Post({
       )}
 
       <div className="post-actions">
-        <button onClick={likePost} className={`${liked ? "liked-button" : ""}`}>
+        <button onClick={handleLikePost} className={`${liked ? "liked-button" : ""}`}>
+
           <i
             className={`bi ${liked ? "bi-hand-thumbs-up-fill" : "bi-hand-thumbs-up"
               }`}

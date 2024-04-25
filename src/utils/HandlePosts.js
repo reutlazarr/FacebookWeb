@@ -18,12 +18,15 @@ export async function addPost(user, newPostContent, postImage, setPostsList) {
         });
 
         if (!response.ok) {
+            if (response.status === 451) {
+                alert('This post contains a URL which is not allowed.')
+            }
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         const newPost = await response.json();
-        console.log("new post: " + newPost)
-        console.log("new post image: " + newPost.image)
+        // console.log("new post: " + newPost)
+        // console.log("new post image: " + newPost.image)
         setPostsList(postsList => [newPost, ...postsList]);
     } catch (error) {
         console.error("Error adding post:", error);
@@ -64,6 +67,9 @@ export async function updatePost(user, postId, updatedContent, updatedImage, pos
         });
 
         if (!response.ok) {
+            if (response.status === 451) {
+                alert('This post contains a URL which is not allowed.')
+            }
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
